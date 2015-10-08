@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -54,12 +55,20 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataStore.cs" />
+    <Compile Include="EditEntry.xaml.cs">
+      <DependentUpon>EditEntry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ImageFromExeRetriever.cs" />
     <Compile Include="MiSettings.cs" />
     <Compile Include="MiSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>MiSettings.settings</DependentUpon>
     </Compile>
+    <Page Include="EditEntry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -74,6 +83,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WpfCrutches\ObservableSortedList.cs" />
     <Compile Include="One.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

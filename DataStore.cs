@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,12 @@ namespace Migo
         //source: http://www.codeproject.com/Articles/483055/XML-Serialization-and-Deserialization-Part
         private XmlSerializer serializer;
 
-        private List<OneExe> _executables;
-        public List<OneExe> Executables
+        public bool SortExecutablesNeeded { get; set; }
+
+        private WpfCrutches.ObservableSortedList<OneExe> _executables;
+        public WpfCrutches.ObservableSortedList<OneExe> Executables
         {
-            get { return _executables ?? (_executables = new List<OneExe>()); }
+            get { return _executables ?? (_executables = new WpfCrutches.ObservableSortedList<OneExe>()); }
             private set { _executables = value; }
         }
 
@@ -32,7 +35,7 @@ namespace Migo
             {
                 using (var reader = new StringReader(loaded))
                 {
-                    this.Executables = serializer.Deserialize(reader) as List<OneExe>;
+                   // this.Executables = serializer.Deserialize(reader) as WpfCrutches.ObservableSortedList<OneExe>;
                 }
             }
             catch (InvalidOperationException ex)
@@ -62,10 +65,12 @@ namespace Migo
         
         private void InitializeSampleEntries()
         {
-            this.Executables.Add(new OneExe(@"C:\bin\Mikogo-host.exe"));
+            this.Executables.Add(new OneExe(@"C:\bin\Mikogo-host.exe", category: "cat 1"));
             this.Executables.Add(new OneExe(@"C:\bin\Mikogo-host.exe", arguments: "-s 000000930"));
+            this.Executables.Add(new OneExe(@"C:\bin\Mikogo-viewer.exe", arguments: "-s 000000930"));
+            this.Executables.Add(new OneExe(@"C:\bin\SessionPlayer.exe", category: "a01"));
 
-            Save();
+            //Save();
         }
     }
 }
