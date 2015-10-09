@@ -1,6 +1,7 @@
 ﻿/**
  * I could not find license information, but this code is from this source:
  * https://bitbucket.org/rstarkov/wpfcrutches/src/tip/ObservableSortedList.cs?fileviewer=file-view-default
+ * (c) Roman Starkov
  */
 using System;
 using System.Collections.Generic;

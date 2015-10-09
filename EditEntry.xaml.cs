@@ -54,5 +54,16 @@ namespace Migo
             _item.Title = tbTitle.Text;
             this.Close();
         }
+
+        private void btnSelectExe_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            // list of executable files as found here: http://www.howtogeek.com/137270/50-file-extensions-that-are-potentially-dangerous-on-windows/
+            openFileDialog.Filter = "Applications (*.exe, ...)|*.exe;*.bat;*.cmd;*.ps*;*.application;*.gadget;*.com;*.cpl;*.msc;*.jar|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                tbPath.Text = openFileDialog.FileName;
+            }
+        }
     }
 }

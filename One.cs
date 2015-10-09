@@ -60,7 +60,7 @@ namespace Migo
         private string _filePath;
         public string FilePath
         {
-            get { return _filePath;  }
+            get { return string.IsNullOrWhiteSpace(_filePath) ? "none given" : _filePath; }
             set
             {
                 if (value != this._filePath)
@@ -89,7 +89,13 @@ namespace Migo
         private string _title;
         public string Title
         {
-            get { return _title; }
+            get {
+                if (string.IsNullOrEmpty(_title))
+                {
+                    _title = (string.IsNullOrWhiteSpace(this._filePath)) ? "" : Path.GetFileName(this._filePath);
+                }
+                return _title;
+            }
             set
             {
                 if (value != this._title)
@@ -103,7 +109,13 @@ namespace Migo
         private string _hint;
         public string Hint
         {
-            get { return _hint; }
+            get {
+                if (string.IsNullOrWhiteSpace(_hint) && !string.IsNullOrWhiteSpace(_filePath))
+                {
+                    _hint = "Start " + FileName;
+                }
+                return _hint; 
+            }
             set
             {
                 if (value != this._hint)
@@ -126,21 +138,7 @@ namespace Migo
         }
         #endregion
 
-        public OneExe()
-        {
-            this.FilePath = "none given";
-            this.Category = "none";
-        }
-
-        public OneExe(String filename, string title = "", string description = "", string arguments = "", string category = "")
-        {
-            this.FilePath = filename;
-            this.Title = Path.GetFileNameWithoutExtension(this.FilePath);
-            this.Hint = String.IsNullOrEmpty(description) ? "Start " + Path.GetFileName(this.Title) : description;
-
-            this.Arguments = arguments;
-            this.Category = category;
-        }
+        public OneExe() {}
 
         public JumpTask ToJumpTask() 
         {

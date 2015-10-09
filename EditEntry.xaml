@@ -5,7 +5,7 @@
     <Grid>
         <Label Content="Executable" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbPath" Height="23" Margin="20,73,9.6,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
-        <Button Content="Search" Margin="209,50,9.6,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnSelectExe" Content="Search" Margin="209,50,9.6,0" VerticalAlignment="Top" Click="btnSelectExe_Click"/>
         <Label Content="Arguments" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbArguments" Height="23" Margin="20,132,9.6,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
         <Label Content="Title" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" ToolTip="This will be displayed in the Jumplist"/>

@@ -25,7 +25,7 @@ namespace Migo
 
         public DataStore()
         {
-            serializer = new XmlSerializer(Executables.GetType());
+            serializer = new XmlSerializer(typeof(List<OneExe>));
         }
 
         public void Load()
@@ -35,16 +35,15 @@ namespace Migo
             {
                 using (var reader = new StringReader(loaded))
                 {
-                   // this.Executables = serializer.Deserialize(reader) as WpfCrutches.ObservableSortedList<OneExe>;
+                    var templist = serializer.Deserialize(reader) as List<OneExe>;
+                    this.Executables = new WpfCrutches.ObservableSortedList<OneExe>(templist);
                 }
             }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine("InvalidOperationException while deserializing settings.");
-            }
+            catch (InvalidOperationException) {}
+            catch (ArgumentNullException) {}
             
             // Add some Default entries if none exist
-            if (this.Executables.Count == 0)
+            if (this.Executables == null || this.Executables.Count == 0)
             {
                 InitializeSampleEntries();
             }
@@ -55,7 +54,8 @@ namespace Migo
             string str;
             using (var writer = new StringWriter())
             {
-                serializer.Serialize(writer, Executables);
+                var list = Executables.ToList<OneExe>();
+                serializer.Serialize(writer, list);
                 str = writer.ToString();
             }
 
@@ -65,12 +65,12 @@ namespace Migo
         
         private void InitializeSampleEntries()
         {
-            this.Executables.Add(new OneExe(@"C:\bin\Mikogo-host.exe", category: "cat 1"));
-            this.Executables.Add(new OneExe(@"C:\bin\Mikogo-host.exe", arguments: "-s 000000930"));
-            this.Executables.Add(new OneExe(@"C:\bin\Mikogo-viewer.exe", arguments: "-s 000000930"));
-            this.Executables.Add(new OneExe(@"C:\bin\SessionPlayer.exe", category: "a01"));
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-host.exe", Category = "cat 1" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-host.exe", Arguments = "-s 000000930" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-viewer.exe", Arguments = "-s 000000930" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\SessionPlayer.exe", Category ="a01" });
 
-            //Save();
+            Save();
         }
     }
 }

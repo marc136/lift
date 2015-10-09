@@ -1,16 +1,16 @@
 ﻿#todo
 - serialize new SortedObservableCollection (fix saving bug)
-
+- add description to dialog
 
 #done
+- select exe dialog
+-- select exe with file picker
+-- add caption, arguments, description to dialog
 - persistently save/load exe list
 - display list of exes
 - sort list of exes
 
 #Steps
-- select exe dialog
--- select exe with file picker
--- add caption, arguments, description to dialog
 - user may copy commands
 - user may change category with drag&drop
 

@@ -29,8 +29,6 @@ namespace Migo
             InitializeComponent();
             _data = new DataStore();
             _data.Load();
-            _data.Executables.CollectionChanged += Executables_CollectionChanged;
-
             Hagge();
 
             AddDataToListBox();
@@ -43,6 +41,28 @@ namespace Migo
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(_data.Executables);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("Category");
             view.GroupDescriptions.Add(groupDescription);
+
+            _data.Executables.CollectionChanged += Executables_CollectionChanged;
+        }
+
+        void Executables_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            // save to task bar
+            var thisJumpList = JumpList.GetJumpList(Application.Current);
+
+            thisJumpList.ShowFrequentCategory = false;
+            thisJumpList.ShowRecentCategory = false;
+            thisJumpList.JumpItems.Clear();
+
+            /**/
+            foreach (var exe in _data.Executables)
+            {
+                var task = exe.ToJumpTask();
+                thisJumpList.JumpItems.Add(task);
+            }/**/
+
+            thisJumpList.Apply();
+            //thisJumpList.SetJumpList(Application.Current, jumpList);
         }
 
 
@@ -107,7 +127,8 @@ namespace Migo
 
         private void btnAddACommand_Click(object sender, RoutedEventArgs e)
         {
-            _data.Executables.Add(new OneExe(@"d:\Hello.exe", category: "Another Category"));
+            CreateOrEditCommand();
+            //_data.Executables.Add(new OneExe(@"d:\Hello.exe", category: "Another Category"));
         }
 
         private void lbShownCommands_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -118,56 +139,33 @@ namespace Migo
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
 
-            item.PropertyChanged += item_PropertyChanged;
+            CreateOrEditCommand(item);
+        }
+
+        private void CreateOrEditCommand(OneExe item = null)
+        {
+            bool editMode = true;
+            if (item == null)
+            {
+                editMode = false;
+                item = new OneExe();
+            }
+
             var editWindow = new EditEntry();
             editWindow.UseItem(item);
 
             editWindow.ShowDialog();
-            item.PropertyChanged -= item_PropertyChanged;
-            if (!editWindow.Success || editWindow.Entry == null) return;
-
-            var exes = _data.Executables;
-            var index = _data.Executables.IndexOf(item);
-
-            if (true)
+            if (editWindow.Success && editWindow.Entry != null)
             {
-                _data.Executables.Remove(item);
+                if (editMode) _data.Executables.Remove(item);
                 _data.Executables.Add(editWindow.Entry);
             }
-            else
-            {
-                _data.Executables[index] = editWindow.Entry;
-            }
-
-            Console.WriteLine("double click");
         }
 
-        void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void lbShownCommands_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // sort list again
-            // if a category was changed
-            // if the title of an item was changed
-            switch (e.PropertyName)
-            {
-                case "Category":
-                case "Title":
-                    //_data.Executables.OrderBy(i => i.Title);
-                    _data.SortExecutablesNeeded = true;
-                    break;
-            }
+            // add delete command
         }
-
-        void Executables_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Console.WriteLine("Collection was changed.");
-            if (_data.SortExecutablesNeeded)
-            {
-                _data.SortExecutablesNeeded = false;
-                //_data.Executables.OrderBy(i => i.Title);
-            }
-        }
-
-
     }
 
 }
