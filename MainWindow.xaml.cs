@@ -29,8 +29,7 @@ namespace Migo
             InitializeComponent();
             _data = new DataStore();
             _data.Load();
-            Hagge();
-
+            
             AddDataToListBox();
         }
         
@@ -65,59 +64,6 @@ namespace Migo
             //thisJumpList.SetJumpList(Application.Current, jumpList);
         }
 
-
-        public void Hagge()
-        {
-            //path to wordpad
-            var wpad = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "write.exe");
-
-            JumpTask entry = makeOne();
-
-            JumpList jumpList = new JumpList();
-
-            jumpList.JumpItems.Add(entry);
-
-            entry = makeOne();
-            entry.CustomCategory = "Horst";
-            jumpList.JumpItems.Add(entry);
-
-            entry = makeOne();
-            entry.CustomCategory = "_edit";
-            entry.Title = "Edit entries";
-            jumpList.JumpItems.Add(entry);
-
-            entry = makeOne();
-            entry.CustomCategory = null;
-            entry.Title = "Moin";
-            jumpList.JumpItems.Add(entry);
-
-            /*
-            foreach (var exe in executables)
-            {
-                var task = exe.ToJumpTask();
-                task.CustomCategory = "Starter Category";
-                jumpList.JumpItems.Add(task);
-            }/**/
-
-            jumpList.ShowFrequentCategory = false;
-            jumpList.ShowRecentCategory = false;
-
-            JumpList.SetJumpList(Application.Current, jumpList);
-        }
-
-        private JumpTask makeOne()
-        {
-            return new JumpTask
-            {
-                Title = "Check for Updates",
-                Arguments = "/update",
-                Description = "Checks for Software Updates",
-                CustomCategory = "Left",
-                IconResourcePath = Assembly.GetEntryAssembly().CodeBase,
-                ApplicationPath = Assembly.GetEntryAssembly().CodeBase
-            };
-        }
-
         public void ClearJumpList()
         {
             var jumpList = JumpList.GetJumpList(Application.Current);
@@ -128,7 +74,6 @@ namespace Migo
         private void btnAddACommand_Click(object sender, RoutedEventArgs e)
         {
             CreateOrEditCommand();
-            //_data.Executables.Add(new OneExe(@"d:\Hello.exe", category: "Another Category"));
         }
 
         private void lbShownCommands_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -162,10 +107,21 @@ namespace Migo
             }
         }
 
-        private void lbShownCommands_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        #region Context Menu clicks
+        private void SingleEntryEdit_Click(object sender, RoutedEventArgs e)
         {
-            // add delete command
+            var item = lbShownCommands.SelectedItem as OneExe;
+            if (item == null) return;
+            CreateOrEditCommand(item);
         }
+
+        private void SingleEntryDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var item = lbShownCommands.SelectedItem as OneExe;
+            if (item == null) return;
+            _data.Executables.Remove(item);
+        }
+        #endregion
     }
 
 }
