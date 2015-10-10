@@ -1,11 +1,15 @@
 ﻿#todo
-- serialize new SortedObservableCollection (fix saving bug)
-- add description to dialog
+- Update edit form on change
+- Update icon on change
 
 #done
+- save list of executables on quitting application to storage position
+- save jumplist on change
+- add Contextmenu to edit and delete entries
+- serialize new SortedObservableCollection (fix saving bug)
 - select exe dialog
 -- select exe with file picker
--- add caption, arguments, description to dialog
+-- add caption, arguments, description/tooltip to dialog
 - persistently save/load exe list
 - display list of exes
 - sort list of exes
@@ -19,7 +23,6 @@
 - select storage position (appdata or file in folder)
 - watch executables (e.g. dropbox)
 - change icon
-
 
 
 
