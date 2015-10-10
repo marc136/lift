@@ -38,6 +38,7 @@ namespace Migo
             tbArguments.Text = item.Arguments;
             tbCategory.Text = item.Category;
             tbTitle.Text = item.Title;
+            tbTooltip.Text = _item.Hint;
         }
         
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -52,6 +53,7 @@ namespace Migo
             _item.Arguments = tbArguments.Text;
             _item.Category = tbCategory.Text;
             _item.Title = tbTitle.Text;
+            _item.Hint = tbTooltip.Text;
             this.Close();
         }
 
