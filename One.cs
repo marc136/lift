@@ -66,6 +66,8 @@ namespace Migo
                 if (value != this._filePath)
                 {
                     this._filePath = value;
+                    this.Title = "";
+                    this.Hint = "";
                     NotifyPropertyChanged("FilePath");
                 }
             }
@@ -153,7 +155,16 @@ namespace Migo
             };
         }
 
-
+        public void UpdateWith(OneExe other)
+        {
+            this.FilePath = other.FilePath;
+            this.Arguments = other.Arguments;
+            this.Category = other.Category;
+            this.Title = other.Title;
+            this.Hint = other.Hint;
+            this.ImageSource = other.ImageSource;
+            this.Icon = other.Icon;
+        }
 
         public int CompareTo(OneExe other)
         {

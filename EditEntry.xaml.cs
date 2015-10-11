@@ -32,13 +32,34 @@ namespace Migo
 
         public void UseItem(OneExe item)
         {
-            //this._item = new OneExe(){ FilePath = item.FilePath, Arguments = item.Arguments, Category = item.Category, Title = item.Title };
-            this._item = item;
-            tbPath.Text = item.FilePath;
-            tbArguments.Text = item.Arguments;
-            tbCategory.Text = item.Category;
-            tbTitle.Text = item.Title;
-            tbTooltip.Text = _item.Hint;
+            if (this._item != null) this._item.PropertyChanged -= _item_PropertyChanged;
+            
+            this._item = new OneExe(){ FilePath = item.FilePath, Arguments = item.Arguments, Category = item.Category, Title = item.Title };
+            //this._item = item;
+
+            UpdateEntryFields();
+            this._item.PropertyChanged += _item_PropertyChanged;
+        }
+
+        private void UpdateEntryFields(string property = "")
+        {
+            bool all = string.IsNullOrWhiteSpace(property);
+
+            if (all || property.Equals("FilePath"))
+                tbPath.Text = _item.FilePath;
+            if (all || property.Equals("Arguments"))
+                tbArguments.Text = _item.Arguments;
+            if (all || property.Equals("Category"))
+                tbCategory.Text = _item.Category;
+            if (all || property.Equals("Title"))
+                tbTitle.Text = _item.Title;
+            if (all || property.Equals("Hint"))
+                tbTooltip.Text = _item.Hint;
+        }
+
+        void _item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            UpdateEntryFields(e.PropertyName);
         }
         
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -64,7 +85,8 @@ namespace Migo
             openFileDialog.Filter = "Applications (*.exe, ...)|*.exe;*.bat;*.cmd;*.ps*;*.application;*.gadget;*.com;*.cpl;*.msc;*.jar|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
-                tbPath.Text = openFileDialog.FileName;
+                //tbPath.Text = openFileDialog.FileName;
+                _item.FilePath = openFileDialog.FileName;
             }
         }
     }
