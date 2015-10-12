@@ -48,6 +48,13 @@ namespace Migo
         {
             // save to task bar
             var thisJumpList = JumpList.GetJumpList(Application.Current);
+            bool newJumpList = false;
+
+            if (thisJumpList == null)
+            {
+                newJumpList = true;
+                thisJumpList = new JumpList();
+            }
 
             thisJumpList.ShowFrequentCategory = false;
             thisJumpList.ShowRecentCategory = false;
@@ -61,14 +68,17 @@ namespace Migo
             }/**/
 
             thisJumpList.Apply();
-            //thisJumpList.SetJumpList(Application.Current, jumpList);
+            if (newJumpList) JumpList.SetJumpList(Application.Current, thisJumpList);
         }
 
         public void ClearJumpList()
         {
             var jumpList = JumpList.GetJumpList(Application.Current);
-            jumpList.JumpItems.Clear();
-            jumpList.Apply();
+            if (jumpList != null)
+            {
+                jumpList.JumpItems.Clear();
+                jumpList.Apply();
+            }
         }
 
         private void btnAddACommand_Click(object sender, RoutedEventArgs e)
