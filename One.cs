@@ -6,30 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shell;
+using System.Xml.Serialization;
 
 namespace Migo
 {
-    [Serializable()]
+    [Serializable]
     public class OneExe : INotifyPropertyChanged, IComparable<OneExe>
     {
         #region Properties
-        [field: NonSerialized()]
-        private System.Drawing.Icon _icon;
-        public System.Drawing.Icon Icon
-        {
-            get
-            {
-                if (_icon == null && !String.IsNullOrEmpty(FilePath))
-                {
-                    _icon = ImageFromExeRetriever.RetrieveAsIcon(FilePath);
-                }
-                return _icon;
-            }
-            set { _icon = value; }
-        }
-
-        [field: NonSerialized()]
+        [NonSerialized]
         private System.Windows.Media.ImageSource _image;
+        [XmlIgnoreAttribute]
         public System.Windows.Media.ImageSource ImageSource
         {
             get
@@ -163,7 +150,7 @@ namespace Migo
             this.Title = other.Title;
             this.Hint = other.Hint;
             this.ImageSource = other.ImageSource;
-            this.Icon = other.Icon;
+            //this.Icon = other.Icon;
         }
 
         public int CompareTo(OneExe other)

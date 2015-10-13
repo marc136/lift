@@ -31,6 +31,13 @@ namespace Migo
             _data.Load();
             
             AddDataToListBox();
+
+            this.Closed += MainWindow_Closed;
+        }
+
+        void MainWindow_Closed(object sender, EventArgs e)
+        {
+            _data.Save();
         }
         
         private void AddDataToListBox()
@@ -132,6 +139,7 @@ namespace Migo
             _data.Executables.Remove(item);
         }
         #endregion
+
     }
 
 }

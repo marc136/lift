@@ -25,7 +25,7 @@ namespace Migo
 
         public DataStore()
         {
-            serializer = new XmlSerializer(typeof(List<OneExe>));
+            serializer = new XmlSerializer(Executables.GetType());
         }
 
         public void Load()
@@ -34,9 +34,11 @@ namespace Migo
             try
             {
                 using (var reader = new StringReader(loaded))
-                {
+                {/** /
                     var templist = serializer.Deserialize(reader) as List<OneExe>;
                     this.Executables = new WpfCrutches.ObservableSortedList<OneExe>(templist);
+                 /**/
+                    this.Executables = serializer.Deserialize(reader) as WpfCrutches.ObservableSortedList<OneExe>;
                 }
             }
             catch (InvalidOperationException) {}
@@ -54,8 +56,7 @@ namespace Migo
             string str;
             using (var writer = new StringWriter())
             {
-                var list = Executables.ToList<OneExe>();
-                serializer.Serialize(writer, list);
+                serializer.Serialize(writer, Executables);
                 str = writer.ToString();
             }
 

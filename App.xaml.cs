@@ -25,6 +25,7 @@ namespace Migo
 
         protected override void OnExit(ExitEventArgs e)
         {
+            //_mainWindow.Close();
             base.OnExit(e);
             Console.WriteLine("OnExit was called");
         }
