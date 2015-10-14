@@ -1,7 +1,11 @@
 ﻿#todo
-- user may copy commands
+- add exes with drag&drop
+- user may change category with drag&drop
 
 #done
+- add 'Do you really want to delete' dialog
+- user may copy commands
+-- add duplicate entry to context menu
 - Update icon on change
 - Update edit form on change
 - save list of executables on quitting application to storage position
@@ -16,10 +20,12 @@
 - sort list of exes
 
 #Steps
-- user may change category with drag&drop
 
 #Further features
-- add exes with drag&drop
+- options
+-- toggle 'Do you really want to delete' dialog
+-- set default action (click on icon in task bar)
+--- add edit commands to Jumplist (highest priority) if needed
 - select storage position (appdata or file in folder)
 - watch executables (e.g. dropbox)
 - own application icon

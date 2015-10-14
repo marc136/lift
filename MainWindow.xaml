@@ -42,6 +42,7 @@
                 <!--Defines a context menu-->
                 <ContextMenu x:Key="MyElementMenu">
                     <MenuItem Header="Edit" Click="SingleEntryEdit_Click"/>
+                    <MenuItem Header="Duplicate" Click="SingleEntryDuplicate_Click"/>
                     <MenuItem Header="Delete" Click="SingleEntryDelete_Click"/>
                 </ContextMenu>
 

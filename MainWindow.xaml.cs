@@ -132,11 +132,25 @@ namespace Migo
             CreateOrEditCommand(item);
         }
 
+        private void SingleEntryDuplicate_Click(object sender, RoutedEventArgs e)
+        {
+            var item = lbShownCommands.SelectedItem as OneExe;
+            if (item == null) return;
+            var clone = new OneExe();
+            clone.UpdateWith(item);
+            _data.Executables.Add(clone);
+        }
+
         private void SingleEntryDelete_Click(object sender, RoutedEventArgs e)
         {
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
-            _data.Executables.Remove(item);
+            var text = "Do you really want to delete '" + item.Title + "'?";
+            var result = MessageBox.Show(text, "Delete item", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result == MessageBoxResult.Yes)
+            {
+                _data.Executables.Remove(item);
+            }
         }
         #endregion
 
