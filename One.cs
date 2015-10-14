@@ -55,6 +55,7 @@ namespace Migo
                     this._filePath = value;
                     this.Title = "";
                     this.Hint = "";
+                    this.ImageSource = null;
                     NotifyPropertyChanged("FilePath");
                 }
             }

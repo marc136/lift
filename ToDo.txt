@@ -1,8 +1,9 @@
 ﻿#todo
-- Update edit form on change
-- Update icon on change
+- user may copy commands
 
 #done
+- Update icon on change
+- Update edit form on change
 - save list of executables on quitting application to storage position
 - save jumplist on change
 - add Contextmenu to edit and delete entries
@@ -15,14 +16,14 @@
 - sort list of exes
 
 #Steps
-- user may copy commands
 - user may change category with drag&drop
 
 #Further features
 - add exes with drag&drop
 - select storage position (appdata or file in folder)
 - watch executables (e.g. dropbox)
-- change icon
+- own application icon
+- change exe icon
 
 
 
