@@ -23,6 +23,7 @@ namespace Migo
     public partial class MainWindow : Window
     {
         DataStore _data;
+        CollectionView lbShownCommandsView;
 
         public MainWindow()
         {
@@ -44,14 +45,20 @@ namespace Migo
         {
             lbShownCommands.ItemsSource = _data.Executables;
 
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(_data.Executables);
+            lbShownCommandsView = (CollectionView)CollectionViewSource.GetDefaultView(_data.Executables);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("Category");
-            view.GroupDescriptions.Add(groupDescription);
-
+            lbShownCommandsView.GroupDescriptions.Add(groupDescription);
+            
             _data.Executables.CollectionChanged += Executables_CollectionChanged;
         }
 
         void Executables_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            lbShownCommandsView.Refresh();
+            UpdateJumpList();
+        }
+
+        private void UpdateJumpList() 
         {
             // save to task bar
             var thisJumpList = JumpList.GetJumpList(Application.Current);
@@ -124,7 +131,7 @@ namespace Migo
             }
         }
 
-        #region Context Menu clicks
+        #region Context Menu on item clicks
         private void SingleEntryEdit_Click(object sender, RoutedEventArgs e)
         {
             var item = lbShownCommands.SelectedItem as OneExe;
@@ -146,12 +153,50 @@ namespace Migo
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
             var text = "Do you really want to delete '" + item.Title + "'?";
-            var result = MessageBox.Show(text, "Delete item", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.Yes)
             {
                 _data.Executables.Remove(item);
             }
         }
+        #endregion
+
+        #region Context Menu on header clicks
+        private void GroupHeaderRename_Click(object sender, RoutedEventArgs e)
+        {
+            // retrieve the category name
+            var menuItem = sender as MenuItem;
+            if (menuItem == null) return;
+            var menu = menuItem.CommandParameter as ContextMenu;
+            if (menu == null) return;
+            var groupItem = menu.PlacementTarget as GroupItem;
+            if (groupItem == null) return;
+            var group = groupItem.Content as CollectionViewGroup;
+            if (group == null) return;
+            var category = group.Name as string;
+
+            if (category != null) PromptNewCategoryName(category);
+        }
+
+        private void PromptNewCategoryName(string category)
+        {
+            string newCategoryName = InputDialog.Prompt("Edit category name", "Edit", category);
+
+            if (newCategoryName != null)
+            {
+                foreach (OneExe exe in _data.Executables)
+                {
+                    if (exe.Category.Equals(category))
+                    {
+                        exe.SetCategorySilent(newCategoryName);
+                    }
+                }
+
+                lbShownCommandsView.Refresh();
+                UpdateJumpList();
+            }
+        }
+
         #endregion
 
         /**

@@ -75,6 +75,10 @@ namespace Migo
                 }
             }
         }
+        public void SetCategorySilent(string value)
+        {
+            this._category = value;
+        }
 
         private string _title;
         public string Title

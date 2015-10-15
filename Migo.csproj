@@ -59,6 +59,9 @@
       <DependentUpon>EditEntry.xaml</DependentUpon>
     </Compile>
     <Compile Include="ImageFromExeRetriever.cs" />
+    <Compile Include="InputDialog.xaml.cs">
+      <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MiSettings.cs" />
     <Compile Include="MiSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -66,6 +69,10 @@
       <DependentUpon>MiSettings.settings</DependentUpon>
     </Compile>
     <Page Include="EditEntry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

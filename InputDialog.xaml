@@ -1,0 +1,17 @@
+﻿<Window x:Class="Migo.InputDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="InputDialog" MinHeight="100" MinWidth="200"
+        WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize" Height="124.4" Width="300" >
+    <Grid>
+        <StackPanel HorizontalAlignment="Stretch" Margin="8" VerticalAlignment="Stretch">
+            <TextBlock Name="txtQuestion" TextWrapping="Wrap" FontSize="12" Text="Question"/>
+            <TextBox Name="txtResponse" FontSize="12"  Margin="0,8"/>
+            <PasswordBox Name="txtPasswordResponse" FontSize="12"  Margin="0,8"/>
+            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                <Button Content="_Ok" IsDefault="True" Width="75" Margin="8,0" Name="btnOk" Click="btnOk_Click" />
+                <Button Content="_Cancel" IsCancel="True" Width="75" Margin="8,0" Name="btnCancel" Click="btnCancel_Click" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

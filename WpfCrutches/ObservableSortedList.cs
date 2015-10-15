@@ -85,7 +85,7 @@ namespace WpfCrutches
         /// <summary>Not supported on a sorted collection.</summary>
         public void Insert(int index, T item)
         {
-            throw new InvalidOperationException("Cannot insert an item at an arbitrary index into a ObservableSortedList.");
+            throw new InvalidOperationException("Cannot insert an menuItem at an arbitrary index into a ObservableSortedList.");
         }
 
         /// <summary>Removes the specified item, returning true if found or false otherwise.</summary>
@@ -114,7 +114,7 @@ namespace WpfCrutches
         public T this[int index]
         {
             get { return _list[index]; }
-            set { throw new InvalidOperationException("Cannot set an item at an arbitrary index in a ObservableSortedList."); }
+            set { throw new InvalidOperationException("Cannot set an menuItem at an arbitrary index in a ObservableSortedList."); }
         }
 
         /// <summary>
@@ -201,6 +201,12 @@ namespace WpfCrutches
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex));
         }
 
+        private void collectionChanged_Updated(T item, int index)
+        {
+            if (CollectionChanged != null)
+                CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, index, index));
+        }
+
         private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var item = (T)sender;
@@ -209,7 +215,11 @@ namespace WpfCrutches
             // See if item should now be sorted to a different position
             if (Count <= 1 || (oldIndex == 0 || _comparer.Compare(_list[oldIndex - 1], item) <= 0)
                 && (oldIndex == Count - 1 || _comparer.Compare(item, _list[oldIndex + 1]) <= 0))
+            {
+                collectionChanged_Updated(item, oldIndex);
                 return;
+            }
+                
 
             // Find where it should be inserted 
             _list.RemoveAt(oldIndex);

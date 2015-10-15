@@ -33,8 +33,11 @@
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}" />
+                    <DataTemplate>
+                            <DockPanel HorizontalAlignment="Stretch">
+                                <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}" />
+                                <!--<TextBox>Hagge</TextBox>-->
+                            </DockPanel>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
@@ -42,21 +45,28 @@
             
             <ListBox.Resources>
                 <!--Defines a context menu-->
-                <ContextMenu x:Key="MyElementMenu">
+                <ContextMenu x:Key="ListBoxItemContextMenu">
                     <MenuItem Header="Edit" Click="SingleEntryEdit_Click"/>
-                    <MenuItem Header="Duplicate" Click="SingleEntryDuplicate_Click"/>
+                    <MenuItem Header="Clone" Click="SingleEntryDuplicate_Click"/>
                     <MenuItem Header="Delete" Click="SingleEntryDelete_Click"/>
+                </ContextMenu>
+
+                <!--Defines a context menu-->
+                <ContextMenu x:Key="GroupHeaderContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                    <MenuItem Header="Rename" Click="GroupHeaderRename_Click"
+                              CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                 </ContextMenu>
 
                 <!--Sets a context menu for each ListBoxItem in the current ListBox-->
                 <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource MyElementMenu}"/>
+                    <Setter Property="ContextMenu" Value="{StaticResource ListBoxItemContextMenu}"/>
                     <Setter Property="AllowDrop" Value="True"/>
                     <EventSetter Event="Drop" Handler="lbShownCommands_DropOn_ListBoxItem"/>
                 </Style>
                 
                 <Style TargetType="{x:Type GroupItem}">
                     <EventSetter Event="Drop" Handler="lbShownCommands_DropOn_GroupItem"/>
+                    <Setter Property="ContextMenu" Value="{StaticResource GroupHeaderContextMenu}"/>
                 </Style>
             </ListBox.Resources>
         </ListBox>

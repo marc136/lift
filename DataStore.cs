@@ -73,5 +73,20 @@ namespace Migo
 
             Save();
         }
+
+        internal void RenameCategory(string oldCategoryName, string newCategoryName)
+        {
+            OneExe[] selected = Executables.Where(e => e.Category.Equals(oldCategoryName)).ToArray();
+            
+            foreach (OneExe exe in selected) {
+                //exe.Category = "";
+                exe.SetCategorySilent(newCategoryName);
+            }
+            /*
+            foreach (OneExe exe in selected) {
+                exe.Category = newCategoryName;
+            }/**/
+
+        }
     }
 }
