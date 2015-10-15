@@ -1,8 +1,9 @@
 ﻿#todo
-- add exes with drag&drop
-- user may change category with drag&drop
+- user may change an item's category with drag&drop
+- Bug: If e.g. a text file is added, the icon in the jumplist does not work
 
 #done
+- add entries with drag&drop (from Windows Explorer)
 - add 'Do you really want to delete' dialog
 - user may copy commands
 -- add duplicate entry to context menu
@@ -27,6 +28,7 @@
 -- set default action (click on icon in task bar)
 --- add edit commands to Jumplist (highest priority) if needed
 - select storage position (appdata or file in folder)
+- command shows input box to dynamically change arguments (to join specific mikogo sessions)
 - watch executables (e.g. dropbox)
 - own application icon
 - change exe icon

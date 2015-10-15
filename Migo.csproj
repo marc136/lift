@@ -83,6 +83,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObsoleteCode_Preserve.cs" />
     <Compile Include="WpfCrutches\ObservableSortedList.cs" />
     <Compile Include="One.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

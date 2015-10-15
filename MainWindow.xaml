@@ -27,7 +27,9 @@
 
     <Grid>
         <Button x:Name="btnAddACommand" Content="Add one" Margin="0,35,10.4,0" VerticalAlignment="Top" Click="btnAddACommand_Click" HorizontalAlignment="Right" Width="75"/>
-        <ListBox x:Name="lbShownCommands" Margin="10,59,10.4,9.8" Padding="5,0,0,0" MouseDoubleClick="lbShownCommands_DoubleClick">
+        <ListBox x:Name="lbShownCommands" Margin="10,59,10.4,9.8" Padding="5,0,0,0" 
+                 AllowDrop="True" Drop="lbShownCommands_Drop"
+                 MouseDoubleClick="lbShownCommands_DoubleClick">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -49,6 +51,12 @@
                 <!--Sets a context menu for each ListBoxItem in the current ListBox-->
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="ContextMenu" Value="{StaticResource MyElementMenu}"/>
+                    <Setter Property="AllowDrop" Value="True"/>
+                    <EventSetter Event="Drop" Handler="lbShownCommands_DropOn_ListBoxItem"/>
+                </Style>
+                
+                <Style TargetType="{x:Type GroupItem}">
+                    <EventSetter Event="Drop" Handler="lbShownCommands_DropOn_GroupItem"/>
                 </Style>
             </ListBox.Resources>
         </ListBox>

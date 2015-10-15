@@ -154,6 +154,61 @@ namespace Migo
         }
         #endregion
 
+        /**
+         * A user may drop files onto 
+         *   1. An item -> category of that item is used
+         *   2. A category header -> category is used
+         *   3. The ListBox/ScrollViewer -> no category is set (-> default is used)
+         */
+        #region Drop Events Handler
+        private void lbShownCommands_Drop(object sender, DragEventArgs e)
+        {
+            DropEvent_OnCategory("", e);
+        }
+
+        private void lbShownCommands_DropOn_GroupItem(object sender, DragEventArgs e)
+        {
+            var group = sender as GroupItem;
+            if (group == null) return;
+            var context = group.DataContext as CollectionViewGroup;
+            if (context == null) return;
+
+            e.Handled = true;
+            string category = context.Name as string;
+            DropEvent_OnCategory(category, e);
+        }
+
+        private void lbShownCommands_DropOn_ListBoxItem(object sender, DragEventArgs e)
+        {
+            var item = sender as ListBoxItem;
+            if (item == null) return;
+            var exe = item.Content as OneExe;
+            if (exe == null) return;
+            
+            e.Handled = true;
+            string category = exe.Category;
+            DropEvent_OnCategory(category, e);
+        }
+
+        private void DropEvent_OnCategory(string category, DragEventArgs e)
+        {
+            var src = e.OriginalSource;
+
+            var data = e.Data;
+            string[] dataFormats = e.Data.GetFormats(false);
+            string[] dataFormatsWithConvertibleTo = e.Data.GetFormats(true);
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                OneExe exe;
+                string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+                foreach (string path in files) {
+                    exe = new OneExe() { Category = category, FilePath = path };
+                    _data.Executables.Add(exe);
+                }
+            }
+        }
+        #endregion
     }
 
 }
