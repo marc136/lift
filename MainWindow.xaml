@@ -26,6 +26,9 @@
 
 
     <Grid>
+        <TextBlock Margin="10,10,90.4,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="44">
+            Use this list to change the jump list elements. The Entries in the task bar (aka Jumplist) are updated accordingly.
+        </TextBlock>
         <Button x:Name="btnAddACommand" Content="Add one" Margin="0,35,10.4,0" VerticalAlignment="Top" Click="btnAddACommand_Click" HorizontalAlignment="Right" Width="75"/>
         <ListBox x:Name="lbShownCommands" Margin="10,59,10.4,9.8" Padding="5,0,0,0" 
                  AllowDrop="True" Drop="lbShownCommands_Drop"
@@ -44,32 +47,34 @@
             </ListBox.GroupStyle>
             
             <ListBox.Resources>
-                <!--Defines a context menu-->
-                <ContextMenu x:Key="ListBoxItemContextMenu">
-                    <MenuItem Header="Edit" Click="SingleEntryEdit_Click"/>
-                    <MenuItem Header="Clone" Click="SingleEntryDuplicate_Click"/>
-                    <MenuItem Header="Delete" Click="SingleEntryDelete_Click"/>
-                </ContextMenu>
+                <!-- Group Header-->
+                <Style TargetType="{x:Type GroupItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource GroupHeaderContextMenu}"/>
+                    <EventSetter Event="Drop" Handler="GroupHeader_DropOn"/>
+                    <EventSetter Event="MouseLeftButtonDown" Handler="GroupHeader_MouseLeftButtonDown"/>
+                </Style>
 
-                <!--Defines a context menu-->
+                <!--Defines a context menu for the groups-->
                 <ContextMenu x:Key="GroupHeaderContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                    <MenuItem Header="Rename" Click="GroupHeaderRename_Click"
+                    <MenuItem Header="Rename" Click="GroupHeader_ContextMenu_Rename_Click"
                               CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                 </ContextMenu>
-
-                <!--Sets a context menu for each ListBoxItem in the current ListBox-->
+                
+                <!-- ListBox Item (SingleEntry) -->
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="ContextMenu" Value="{StaticResource ListBoxItemContextMenu}"/>
                     <Setter Property="AllowDrop" Value="True"/>
-                    <EventSetter Event="Drop" Handler="lbShownCommands_DropOn_ListBoxItem"/>
+                    <EventSetter Event="Drop" Handler="SingleEntry_DropOn"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="SingleEntry_DoubleClick"/>
                 </Style>
-                
-                <Style TargetType="{x:Type GroupItem}">
-                    <EventSetter Event="Drop" Handler="lbShownCommands_DropOn_GroupItem"/>
-                    <Setter Property="ContextMenu" Value="{StaticResource GroupHeaderContextMenu}"/>
-                </Style>
+
+                <!--Defines a context menu for each item in the ListBox-->
+                <ContextMenu x:Key="ListBoxItemContextMenu">
+                    <MenuItem Header="Edit" Click="SingleEntry_ContextMenu_Edit_Click"/>
+                    <MenuItem Header="Clone" Click="SingleEntry_ContextMenu_Duplicate_Click"/>
+                    <MenuItem Header="Delete" Click="SingleEntry_ContextMenu_Delete_Click"/>
+                </ContextMenu>
             </ListBox.Resources>
         </ListBox>
-        <TextBlock Margin="10,10,90.4,0" TextWrapping="Wrap" Text="Use this list to change the jump list elements. The Entries in the task bar (aka Jumplist) are updated accordingly." VerticalAlignment="Top" Height="44"/>
     </Grid>
 </Window>

@@ -66,10 +66,10 @@ namespace Migo
         
         private void InitializeSampleEntries()
         {
-            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-host.exe", Category = "cat 1" });
-            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-host.exe", Arguments = "-s 000000930" });
-            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-viewer.exe", Arguments = "-s 000000930" });
-            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\SessionPlayer.exe", Category ="a01" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-host.group", Category = "cat 1" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-host.group", Arguments = "-s 000000930" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\Mikogo-viewer.group", Arguments = "-s 000000930" });
+            this.Executables.Add(new OneExe(){ FilePath = @"C:\bin\SessionPlayer.group", Category ="a01" });
 
             Save();
         }

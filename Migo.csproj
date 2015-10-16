@@ -55,11 +55,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataStore.cs" />
-    <Compile Include="EditEntry.xaml.cs">
+    <Compile Include="Windows\EditEntry.xaml.cs">
       <DependentUpon>EditEntry.xaml</DependentUpon>
     </Compile>
     <Compile Include="ImageFromExeRetriever.cs" />
-    <Compile Include="InputDialog.xaml.cs">
+    <Compile Include="Windows\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="MiSettings.cs" />
@@ -68,11 +68,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>MiSettings.settings</DependentUpon>
     </Compile>
-    <Page Include="EditEntry.xaml">
+    <Page Include="Windows\EditEntry.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InputDialog.xaml">
+    <Page Include="Windows\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

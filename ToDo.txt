@@ -1,12 +1,11 @@
 ﻿#todo
-- user may rename a category
--- by double-clicking on a group header
 - user may change an item's category with drag&drop
 - Bug: If e.g. a text file is added, the icon in the jumplist does not work
 
 #done
 - user may rename a category
 -- by using a context menu on the group header
+-- by double-clicking on a group header
 - add entries with drag&drop (from Windows Explorer)
 - add 'Do you really want to delete' dialog
 - user may copy commands

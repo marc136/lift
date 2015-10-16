@@ -103,14 +103,33 @@ namespace Migo
         private void lbShownCommands_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             var uiElement = sender as System.Windows.Controls.Primitives.Selector;
-            
+            /* // not used
             if (lbShownCommands.SelectedIndex == -1) return;
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
 
             CreateOrEditCommand(item);
+            /**/
         }
 
+        private void SingleEntry_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            var item = sender as ListBoxItem;
+            if (item != null)
+            {
+                var exe = item.Content as OneExe;
+                if (exe != null)
+                {
+                    e.Handled = true;
+                    this.CreateOrEditCommand(exe);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Will display the editWindow to either create a new Executable entry or edit an existing one
+        /// </summary>
+        /// <param name="item">Optional entry that should be edited</param>
         private void CreateOrEditCommand(OneExe item = null)
         {
             bool editMode = true;
@@ -131,15 +150,15 @@ namespace Migo
             }
         }
 
-        #region Context Menu on item clicks
-        private void SingleEntryEdit_Click(object sender, RoutedEventArgs e)
+        #region Single entry click events
+        private void SingleEntry_ContextMenu_Edit_Click(object sender, RoutedEventArgs e)
         {
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
             CreateOrEditCommand(item);
         }
 
-        private void SingleEntryDuplicate_Click(object sender, RoutedEventArgs e)
+        private void SingleEntry_ContextMenu_Duplicate_Click(object sender, RoutedEventArgs e)
         {
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
@@ -148,7 +167,7 @@ namespace Migo
             _data.Executables.Add(clone);
         }
 
-        private void SingleEntryDelete_Click(object sender, RoutedEventArgs e)
+        private void SingleEntry_ContextMenu_Delete_Click(object sender, RoutedEventArgs e)
         {
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
@@ -161,22 +180,52 @@ namespace Migo
         }
         #endregion
 
-        #region Context Menu on header clicks
-        private void GroupHeaderRename_Click(object sender, RoutedEventArgs e)
+        #region Group header element click events
+        private void GroupHeader_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount >= 2)
+            {// Cannot use DoubleClick event because it is triggered after a double click on a ListBoxItem (and e.Handled does not work)
+                GroupHeader_RenameGroupItem(sender as GroupItem, e);
+            }
+        }
+
+        private void GroupHeader_ContextMenu_Rename_Click(object sender, RoutedEventArgs e)
         {
             // retrieve the category name
             var menuItem = sender as MenuItem;
-            if (menuItem == null) return;
-            var menu = menuItem.CommandParameter as ContextMenu;
-            if (menu == null) return;
-            var groupItem = menu.PlacementTarget as GroupItem;
-            if (groupItem == null) return;
-            var group = groupItem.Content as CollectionViewGroup;
-            if (group == null) return;
-            var category = group.Name as string;
-
-            if (category != null) PromptNewCategoryName(category);
+            if (menuItem != null)
+            {
+                var menu = menuItem.CommandParameter as ContextMenu;
+                if (menu != null)
+                {
+                    GroupHeader_RenameGroupItem(menu.PlacementTarget as GroupItem, e);
+                }
+            }
         }
+
+        /// <summary>
+        /// retrieves the category name and calls PromptNewCategoryName(category)
+        /// </summary>
+        /// <param name="item">GroupItem of the ListBox</param>
+        private void GroupHeader_RenameGroupItem(GroupItem item, RoutedEventArgs e)
+        {
+            if (item != null && !e.Handled)
+            {
+                var group = item.Content as CollectionViewGroup;
+                if (group != null)
+                {
+                    var category = group.Name as string;
+                    if (category != null)
+                    {
+                        //this is triggered even if only clicking on list item
+                        e.Handled = true;
+                        PromptNewCategoryName(category);
+                    }
+
+                }
+            }
+        }
+        #endregion
 
         private void PromptNewCategoryName(string category)
         {
@@ -197,7 +246,7 @@ namespace Migo
             }
         }
 
-        #endregion
+        
 
         /**
          * A user may drop files onto 
@@ -211,7 +260,7 @@ namespace Migo
             DropEvent_OnCategory("", e);
         }
 
-        private void lbShownCommands_DropOn_GroupItem(object sender, DragEventArgs e)
+        private void GroupHeader_DropOn(object sender, DragEventArgs e)
         {
             var group = sender as GroupItem;
             if (group == null) return;
@@ -223,7 +272,7 @@ namespace Migo
             DropEvent_OnCategory(category, e);
         }
 
-        private void lbShownCommands_DropOn_ListBoxItem(object sender, DragEventArgs e)
+        private void SingleEntry_DropOn(object sender, DragEventArgs e)
         {
             var item = sender as ListBoxItem;
             if (item == null) return;
