@@ -59,7 +59,7 @@
     <Compile Include="Windows\EditEntry.xaml.cs">
       <DependentUpon>EditEntry.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImageFromExeRetriever.cs" />
+    <Compile Include="IconTool.cs" />
     <Compile Include="Windows\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>

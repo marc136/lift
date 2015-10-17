@@ -23,7 +23,7 @@ namespace Migo
             {
                 if (_image == null && !String.IsNullOrEmpty(FilePath))
                 {
-                    _image = ImageFromExeRetriever.RetrieveAsImageSource(FilePath);
+                    _image = IconTool.RetrieveIconForExeAsImageSource(FilePath);
                 }
                 return _image;
             }
@@ -136,7 +136,7 @@ namespace Migo
 
         public JumpTask ToJumpTask() 
         {
-            return new JumpTask
+            var result =  new JumpTask
             {
                 Title = this.Title,
                 Arguments = this.Arguments,
@@ -145,6 +145,19 @@ namespace Migo
                 IconResourcePath = this.FilePath,
                 ApplicationPath = this.FilePath
             };
+
+            var ext = Path.GetExtension(this.FilePath);
+            if (ext != ".exe")
+            {
+                var info = IconTool.GetAssociatedExeForExtension(ext);
+                if (info != null)
+                {
+                    result.IconResourcePath = info.FilePath;
+                    result.IconResourceIndex = info.IconIndex;
+                }
+            }
+
+            return result;
         }
 
         public void UpdateWith(OneExe other)

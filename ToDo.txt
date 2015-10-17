@@ -1,7 +1,7 @@
 ﻿#todo
-- Bug: If e.g. a text file is added, the icon in the jumplist does not work
 
 #done
+- if non-exe files are added the jumplist icon is loaded from the file extension (using registry)
 - user may change an item's category with drag&drop
 - user may rename a category
 -- by using a context menu on the group header

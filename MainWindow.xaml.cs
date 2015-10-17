@@ -35,6 +35,8 @@ namespace Migo
             AddDataToListBox();
             dragHelper = new DragDropHelper();
             this.Closed += MainWindow_Closed;
+
+            var ico = IconTool.GetAssociatedExeForExtension(".json");
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
