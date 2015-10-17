@@ -24,6 +24,7 @@ namespace Migo
     {
         DataStore _data;
         CollectionView lbShownCommandsView;
+        DragDropHelper dragHelper;
 
         public MainWindow()
         {
@@ -32,7 +33,7 @@ namespace Migo
             _data.Load();
             
             AddDataToListBox();
-
+            dragHelper = new DragDropHelper();
             this.Closed += MainWindow_Closed;
         }
 
@@ -178,6 +179,19 @@ namespace Migo
                 _data.Executables.Remove(item);
             }
         }
+
+        
+        private void SingleEntry_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var a = sender;
+            if (e.ClickCount == 1)
+            {// Cannot use DoubleClick event because it is triggered after a double click on a ListBoxItem (and e.Handled does not work)
+                //sender as GroupItem
+                dragHelper.StartPosition = e.GetPosition(null);
+                dragHelper.ListBoxItem = sender as ListBoxItem;
+                dragHelper.Entry = dragHelper.ListBoxItem.Content as OneExe;
+            }
+        }
         #endregion
 
         #region Group header element click events
@@ -246,7 +260,23 @@ namespace Migo
             }
         }
 
-        
+        #region Drag Element
+        private void lbShowCommands_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && dragHelper.Entry != null)
+            {
+                Point mousePos = e.GetPosition(null);
+                Vector diff = dragHelper.StartPosition - mousePos;
+
+                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    DataObject dragData = new DataObject("itemDragged", dragHelper.Entry);
+                    DragDrop.DoDragDrop(dragHelper.ListBoxItem, dragData, DragDropEffects.Move);
+                }
+            }
+        }
+        #endregion
 
         /**
          * A user may drop files onto 
@@ -300,6 +330,14 @@ namespace Migo
                     exe = new OneExe() { Category = category, FilePath = path };
                     _data.Executables.Add(exe);
                 }
+            }
+            else if (e.Data.GetDataPresent("itemDragged"))
+            {
+                OneExe dropped = e.Data.GetData("itemDragged") as OneExe;
+                // If the item would become the first in the list, an error is thrown (out of range) if the category is changed directly
+                _data.Executables.Remove(dropped);
+                dropped.Category = category;
+                _data.Executables.Add(dropped);
             }
         }
         #endregion

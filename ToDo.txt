@@ -1,8 +1,8 @@
 ﻿#todo
-- user may change an item's category with drag&drop
 - Bug: If e.g. a text file is added, the icon in the jumplist does not work
 
 #done
+- user may change an item's category with drag&drop
 - user may rename a category
 -- by using a context menu on the group header
 -- by double-clicking on a group header
@@ -35,6 +35,7 @@
 - watch executables (e.g. dropbox)
 - own application icon
 - change exe icon
+- change category as an inline element in the group header
 
 
 
@@ -63,21 +64,3 @@ If app is started first time:
   - or if settings.json exists in app folder
 
 ---
-
-How to handle executables? TreeView or Table/List?
-
-1. TreeView
-- User creates/edits categories
-- User creates/edits commands
-- User can drag commands to other categories
-- User can right-click and duplicate commands
-
-2. Table/List
-- User creates/edits commands (incl. category)
-  con: cannot change category name of multiple commands
-- Commands are listed according to their category
-
-Either way:
-Exe path and commands should be visible
-- Optional: Exe icon
-

@@ -32,7 +32,8 @@
         <Button x:Name="btnAddACommand" Content="Add one" Margin="0,35,10.4,0" VerticalAlignment="Top" Click="btnAddACommand_Click" HorizontalAlignment="Right" Width="75"/>
         <ListBox x:Name="lbShownCommands" Margin="10,59,10.4,9.8" Padding="5,0,0,0" 
                  AllowDrop="True" Drop="lbShownCommands_Drop"
-                 MouseDoubleClick="lbShownCommands_DoubleClick">
+                 MouseDoubleClick="lbShownCommands_DoubleClick"
+                 MouseMove="lbShowCommands_MouseMove">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -66,6 +67,7 @@
                     <Setter Property="AllowDrop" Value="True"/>
                     <EventSetter Event="Drop" Handler="SingleEntry_DropOn"/>
                     <EventSetter Event="MouseDoubleClick" Handler="SingleEntry_DoubleClick"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SingleEntry_MouseLeftButtonDown"/>
                 </Style>
 
                 <!--Defines a context menu for each item in the ListBox-->
