@@ -48,26 +48,17 @@
             </ListBox.GroupStyle>
             
             <ListBox.Resources>
-                <!-- Group Header-->
-                <Style TargetType="{x:Type GroupItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource GroupHeaderContextMenu}"/>
-                    <EventSetter Event="Drop" Handler="GroupHeader_DropOn"/>
-                    <EventSetter Event="MouseLeftButtonDown" Handler="GroupHeader_MouseLeftButtonDown"/>
-                </Style>
-
                 <!--Defines a context menu for the groups-->
                 <ContextMenu x:Key="GroupHeaderContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                     <MenuItem Header="Rename" Click="GroupHeader_ContextMenu_Rename_Click"
                               CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                 </ContextMenu>
-                
-                <!-- ListBox Item (SingleEntry) -->
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ListBoxItemContextMenu}"/>
-                    <Setter Property="AllowDrop" Value="True"/>
-                    <EventSetter Event="Drop" Handler="SingleEntry_DropOn"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="SingleEntry_DoubleClick"/>
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SingleEntry_MouseLeftButtonDown"/>
+
+                <!-- Group Header-->
+                <Style TargetType="{x:Type GroupItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource GroupHeaderContextMenu}"/>
+                    <EventSetter Event="Drop" Handler="GroupHeader_DropOn"/>
+                    <EventSetter Event="MouseLeftButtonDown" Handler="GroupHeader_MouseLeftButtonDown"/>
                 </Style>
 
                 <!--Defines a context menu for each item in the ListBox-->
@@ -76,6 +67,15 @@
                     <MenuItem Header="Clone" Click="SingleEntry_ContextMenu_Duplicate_Click"/>
                     <MenuItem Header="Delete" Click="SingleEntry_ContextMenu_Delete_Click"/>
                 </ContextMenu>
+
+                <!-- ListBox Item (SingleEntry) -->
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ListBoxItemContextMenu}"/>
+                    <Setter Property="AllowDrop" Value="True"/>
+                    <EventSetter Event="Drop" Handler="SingleEntry_DropOn"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="SingleEntry_DoubleClick"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SingleEntry_MouseLeftButtonDown"/>
+                </Style>
             </ListBox.Resources>
         </ListBox>
     </Grid>

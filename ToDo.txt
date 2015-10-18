@@ -1,4 +1,8 @@
 ﻿#todo
+- options
+-- toggle 'Do you really want to delete' dialog
+-- set default action (click on icon in task bar)
+--- add edit commands to Jumplist (highest priority) if needed
 
 #done
 - if non-exe files are added the jumplist icon is loaded from the file extension (using registry)
@@ -26,10 +30,6 @@
 #Steps
 
 #Further features
-- options
--- toggle 'Do you really want to delete' dialog
--- set default action (click on icon in task bar)
---- add edit commands to Jumplist (highest priority) if needed
 - select storage position (appdata or file in folder)
 - command shows input box to dynamically change arguments (to join specific mikogo sessions)
 - watch executables (e.g. dropbox)
