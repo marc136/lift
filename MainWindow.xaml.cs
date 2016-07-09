@@ -133,8 +133,7 @@ namespace Migo
         {
             var item = lbShownCommands.SelectedItem as OneExe;
             if (item == null) return;
-            var clone = new OneExe();
-            clone.UpdateWith(item);
+            var clone = OneExe.Clone(item);
             _data.Executables.Add(clone);
         }
 

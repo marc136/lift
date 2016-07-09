@@ -60,14 +60,16 @@ namespace Migo
                 }
             }
         }
-        
+
         public string FileName { get { return Path.GetFileName(FilePath); } }
         public string FolderPath { get { return Path.GetDirectoryName(FilePath); } }
 
         private string _category;
-        public string Category {
+        public string Category
+        {
             get { return String.IsNullOrEmpty(this._category) ? "none" : this._category; }
-            set {
+            set
+            {
                 if (value != this._category)
                 {
                     this._category = value;
@@ -83,7 +85,8 @@ namespace Migo
         private string _title;
         public string Title
         {
-            get {
+            get
+            {
                 if (string.IsNullOrEmpty(_title))
                 {
                     _title = (string.IsNullOrWhiteSpace(this._filePath)) ? "" : Path.GetFileName(this._filePath);
@@ -103,12 +106,13 @@ namespace Migo
         private string _hint;
         public string Hint
         {
-            get {
+            get
+            {
                 if (string.IsNullOrWhiteSpace(_hint) && !string.IsNullOrWhiteSpace(_filePath))
                 {
                     _hint = "Start " + FileName;
                 }
-                return _hint; 
+                return _hint;
             }
             set
             {
@@ -132,11 +136,11 @@ namespace Migo
         }
         #endregion
 
-        public OneExe() {}
+        public OneExe() { }
 
-        public JumpTask ToJumpTask() 
+        public JumpTask ToJumpTask()
         {
-            var result =  new JumpTask
+            var result = new JumpTask
             {
                 Title = this.Title,
                 Arguments = this.Arguments,
@@ -160,24 +164,29 @@ namespace Migo
             return result;
         }
 
-        public void UpdateWith(OneExe other)
-        {
-            this.FilePath = other.FilePath;
-            this.Arguments = other.Arguments;
-            this.Category = other.Category;
-            this.Title = other.Title;
-            this.Hint = other.Hint;
-            this.ImageSource = other.ImageSource;
-            //this.Icon = other.Icon;
-        }
-
         public int CompareTo(OneExe other)
         {
             var value = this.Category.CompareTo(other.Category);
-            if (value == 0) {
+            if (value == 0)
+            {
                 value = this.Title.CompareTo(other.Title);
             }
             return value;
+        }
+
+        public static OneExe Clone(OneExe other)
+        {
+            var clone = new OneExe
+            {
+                FilePath = other.FilePath,
+                Arguments = other.Arguments,
+                Category = other.Category,
+                Title = other.Title,
+                Hint = other.Hint,
+                ImageSource = other.ImageSource
+                //Icon = other.Icon
+            };
+            return clone;
         }
     }
 }
