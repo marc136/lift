@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shell;
+﻿using System.Windows.Shell;
 
 namespace Migo
 {
     class MigoJumplist
     {
-        public MigoJumplist()
-        {
-
-        }
+        public MigoJumplist() { }
 
         public void Update(WpfCrutches.ObservableSortedList<OneExe> entries)
         {
@@ -33,12 +25,38 @@ namespace Migo
             /**/
             foreach (var exe in entries)
             {
-                var task = exe.ToJumpTask();
+                var task = CreateJumpTaskItem(exe);
                 thisJumpList.JumpItems.Add(task);
             }/**/
 
             thisJumpList.Apply();
             if (newJumpList) JumpList.SetJumpList(System.Windows.Application.Current, thisJumpList);
+        }
+
+        private JumpTask CreateJumpTaskItem(OneExe entry)
+        {
+            var result = new JumpTask
+            {
+                Title = entry.Title,
+                Arguments = entry.Arguments,
+                Description = entry.Hint,
+                CustomCategory = entry.Category,
+                IconResourcePath = entry.FilePath,
+                ApplicationPath = entry.FilePath
+            };
+
+            var ext = System.IO.Path.GetExtension(entry.FilePath);
+            if (ext != ".exe")
+            {
+                var info = IconTool.GetAssociatedExeForExtension(ext);
+                if (info != null)
+                {
+                    result.IconResourcePath = info.FilePath;
+                    result.IconResourceIndex = info.IconIndex;
+                }
+            }
+
+            return result;
         }
 
         public void ClearJumpList()

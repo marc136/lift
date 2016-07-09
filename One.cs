@@ -138,32 +138,6 @@ namespace Migo
 
         public OneExe() { }
 
-        public JumpTask ToJumpTask()
-        {
-            var result = new JumpTask
-            {
-                Title = this.Title,
-                Arguments = this.Arguments,
-                Description = this.Hint,
-                CustomCategory = this.Category,
-                IconResourcePath = this.FilePath,
-                ApplicationPath = this.FilePath
-            };
-
-            var ext = Path.GetExtension(this.FilePath);
-            if (ext != ".exe")
-            {
-                var info = IconTool.GetAssociatedExeForExtension(ext);
-                if (info != null)
-                {
-                    result.IconResourcePath = info.FilePath;
-                    result.IconResourceIndex = info.IconIndex;
-                }
-            }
-
-            return result;
-        }
-
         public int CompareTo(OneExe other)
         {
             var value = this.Category.CompareTo(other.Category);
