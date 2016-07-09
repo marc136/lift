@@ -1,6 +1,16 @@
 ﻿#todo
+- Keyboard interaction
+-- trigger delete after hitting 'delete' key
+-- trigger edit mask after hitting 
+--- F2
+--- space
+-- trigger create mask after hitting 'insert'
+-- change selection with up/down
+-- start exe/open file with 'enter'
 - options
 -- toggle 'Do you really want to delete' dialog
+-- export list (xml)
+-- import list (xml)
 -- set default action (click on icon in task bar)
 --- add edit commands to Jumplist (highest priority) if needed
 

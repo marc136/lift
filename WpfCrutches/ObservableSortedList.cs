@@ -219,7 +219,7 @@ namespace WpfCrutches
                 collectionChanged_Updated(item, oldIndex);
                 return;
             }
-                
+
 
             // Find where it should be inserted 
             _list.RemoveAt(oldIndex);

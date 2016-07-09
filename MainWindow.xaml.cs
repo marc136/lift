@@ -25,25 +25,26 @@ namespace Migo
         DataStore _data;
         CollectionView lbShownCommandsView;
         DragDropHelper dragHelper;
+        MigoJumplist jumplistHelper;
 
         public MainWindow()
         {
             InitializeComponent();
             _data = new DataStore();
             _data.Load();
-            
+
+            jumplistHelper = new MigoJumplist();
+
             AddDataToListBox();
             dragHelper = new DragDropHelper();
             this.Closed += MainWindow_Closed;
-
-            var ico = IconTool.GetAssociatedExeForExtension(".json");
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
         {
             _data.Save();
         }
-        
+
         private void AddDataToListBox()
         {
             lbShownCommands.ItemsSource = _data.Executables;
@@ -51,7 +52,6 @@ namespace Migo
             lbShownCommandsView = (CollectionView)CollectionViewSource.GetDefaultView(_data.Executables);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("Category");
             lbShownCommandsView.GroupDescriptions.Add(groupDescription);
-            
             _data.Executables.CollectionChanged += Executables_CollectionChanged;
         }
 
@@ -61,41 +61,9 @@ namespace Migo
             UpdateJumpList();
         }
 
-        private void UpdateJumpList() 
+        private void UpdateJumpList()
         {
-            // save to task bar
-            var thisJumpList = JumpList.GetJumpList(Application.Current);
-            bool newJumpList = false;
-
-            if (thisJumpList == null)
-            {
-                newJumpList = true;
-                thisJumpList = new JumpList();
-            }
-
-            thisJumpList.ShowFrequentCategory = false;
-            thisJumpList.ShowRecentCategory = false;
-            thisJumpList.JumpItems.Clear();
-
-            /**/
-            foreach (var exe in _data.Executables)
-            {
-                var task = exe.ToJumpTask();
-                thisJumpList.JumpItems.Add(task);
-            }/**/
-
-            thisJumpList.Apply();
-            if (newJumpList) JumpList.SetJumpList(Application.Current, thisJumpList);
-        }
-
-        public void ClearJumpList()
-        {
-            var jumpList = JumpList.GetJumpList(Application.Current);
-            if (jumpList != null)
-            {
-                jumpList.JumpItems.Clear();
-                jumpList.Apply();
-            }
+            jumplistHelper.Update(_data.Executables);
         }
 
         private void btnAddACommand_Click(object sender, RoutedEventArgs e)
@@ -182,7 +150,7 @@ namespace Migo
             }
         }
 
-        
+
         private void SingleEntry_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var a = sender;
@@ -247,15 +215,9 @@ namespace Migo
         {
             string newCategoryName = InputDialog.Prompt("Edit category name", "Edit", category);
 
-            if (newCategoryName != null)
+            if (!String.IsNullOrWhiteSpace(newCategoryName))
             {
-                foreach (OneExe exe in _data.Executables)
-                {
-                    if (exe.Category.Equals(category))
-                    {
-                        exe.SetCategorySilent(newCategoryName);
-                    }
-                }
+                _data.RenameCategory(category, newCategoryName);
 
                 lbShownCommandsView.Refresh();
                 UpdateJumpList();
@@ -310,7 +272,7 @@ namespace Migo
             if (item == null) return;
             var exe = item.Content as OneExe;
             if (exe == null) return;
-            
+
             e.Handled = true;
             string category = exe.Category;
             DropEvent_OnCategory(category, e);
@@ -328,7 +290,8 @@ namespace Migo
             {
                 OneExe exe;
                 string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
-                foreach (string path in files) {
+                foreach (string path in files)
+                {
                     exe = new OneExe() { Category = category, FilePath = path };
                     _data.Executables.Add(exe);
                 }

@@ -56,6 +56,7 @@
     </ApplicationDefinition>
     <Compile Include="DataStore.cs" />
     <Compile Include="DragDropHelper.cs" />
+    <Compile Include="MigoJumplist.cs" />
     <Compile Include="Windows\EditEntry.xaml.cs">
       <DependentUpon>EditEntry.xaml</DependentUpon>
     </Compile>
