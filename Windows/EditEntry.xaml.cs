@@ -21,7 +21,7 @@ namespace Migo
     {
         private OneExe _item;
         public OneExe Entry { get { return _item; } }
-        
+
         public bool Success { get; private set; }
 
         public EditEntry()
@@ -30,12 +30,11 @@ namespace Migo
             Success = false;
         }
 
-        public void UseItem(OneExe item)
+        public void UseItem(OneExe item = null)
         {
             if (this._item != null) this._item.PropertyChanged -= _item_PropertyChanged;
-            
-            this._item = new OneExe(){ FilePath = item.FilePath, Arguments = item.Arguments, Category = item.Category, Title = item.Title };
-            //this._item = item;
+
+            this._item = (item != null) ? OneExe.Clone(item) : new OneExe();
 
             UpdateEntryFields();
             this._item.PropertyChanged += _item_PropertyChanged;
@@ -61,7 +60,7 @@ namespace Migo
         {
             UpdateEntryFields(e.PropertyName);
         }
-        
+
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

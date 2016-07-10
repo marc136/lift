@@ -103,12 +103,7 @@ namespace Migo
         /// <param name="item">Optional entry that should be edited</param>
         private void CreateOrEditCommand(OneExe item = null)
         {
-            bool editMode = true;
-            if (item == null)
-            {
-                editMode = false;
-                item = new OneExe();
-            }
+            bool editMode = (item != null) ? true : false;
 
             var editWindow = new EditEntry();
             editWindow.UseItem(item);
