@@ -36,6 +36,8 @@ namespace Migo
             jumplistHelper = new MigoJumplist();
 
             AddDataToListBox();
+            lbShownCommands.SelectedItem = lbShownCommands.Items.GetItemAt(0);
+            lbShownCommands.Focus();
             dragHelper = new DragDropHelper();
             this.Closed += MainWindow_Closed;
         }
@@ -61,14 +63,78 @@ namespace Migo
             UpdateJumpList();
         }
 
+        #region Actions to execute
         private void UpdateJumpList()
         {
             jumplistHelper.Update(_data.Executables);
         }
 
+        /// <summary>
+        /// Will display the editWindow to either create a new Executable entry or edit an existing one
+        /// </summary>
+        /// <param name="item">Optional entry that should be edited</param>
+        private void CreateOrEditEntry(OneExe item = null)
+        {
+            bool editMode = (item != null) ? true : false;
+
+            var editWindow = new EditEntry();
+            editWindow.UseItem(item);
+
+            editWindow.ShowDialog();
+            if (editWindow.Success && editWindow.Entry != null)
+            {
+                if (editMode) _data.Executables.Remove(item);
+                _data.Executables.Add(editWindow.Entry);
+            }
+        }
+
+        private void EditSelectedEntry()
+        {
+            var item = lbShownCommands.SelectedItem as OneExe;
+            if (item == null) return;
+            CreateOrEditEntry(item);
+        }
+
+        private void DeleteSelectedEntry()
+        {
+            var item = lbShownCommands.SelectedItem as OneExe;
+            if (item == null) return;
+            var text = "Do you really want to delete '" + item.Title + "'?";
+            var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result == MessageBoxResult.Yes)
+            {
+                _data.Executables.Remove(item);
+            }
+        }
+
+        private void StartProcess(OneExe item)
+        {
+            if (item == null || String.IsNullOrWhiteSpace(item.FilePath)) return;
+
+            if (String.IsNullOrWhiteSpace(item.Arguments))
+            {
+                // no arguments launch file with default application
+                System.Diagnostics.Process.Start(item.FilePath);
+            }
+            else
+            {
+                // Use ProcessStartInfo class.
+                var startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.CreateNoWindow = false;
+                startInfo.UseShellExecute = false;
+                startInfo.FileName = item.FilePath;
+                //startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.Arguments = item.Arguments;
+
+                System.Diagnostics.Process.Start(startInfo);
+            }
+        }
+
+        #endregion
+
         private void btnAddACommand_Click(object sender, RoutedEventArgs e)
         {
-            CreateOrEditCommand();
+            CreateOrEditEntry();
         }
 
         private void lbShownCommands_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -92,36 +158,15 @@ namespace Migo
                 if (exe != null)
                 {
                     e.Handled = true;
-                    this.CreateOrEditCommand(exe);
+                    CreateOrEditEntry(exe);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Will display the editWindow to either create a new Executable entry or edit an existing one
-        /// </summary>
-        /// <param name="item">Optional entry that should be edited</param>
-        private void CreateOrEditCommand(OneExe item = null)
-        {
-            bool editMode = (item != null) ? true : false;
-
-            var editWindow = new EditEntry();
-            editWindow.UseItem(item);
-
-            editWindow.ShowDialog();
-            if (editWindow.Success && editWindow.Entry != null)
-            {
-                if (editMode) _data.Executables.Remove(item);
-                _data.Executables.Add(editWindow.Entry);
             }
         }
 
         #region Single entry click events
         private void SingleEntry_ContextMenu_Edit_Click(object sender, RoutedEventArgs e)
         {
-            var item = lbShownCommands.SelectedItem as OneExe;
-            if (item == null) return;
-            CreateOrEditCommand(item);
+            EditSelectedEntry();
         }
 
         private void SingleEntry_ContextMenu_Duplicate_Click(object sender, RoutedEventArgs e)
@@ -134,16 +179,8 @@ namespace Migo
 
         private void SingleEntry_ContextMenu_Delete_Click(object sender, RoutedEventArgs e)
         {
-            var item = lbShownCommands.SelectedItem as OneExe;
-            if (item == null) return;
-            var text = "Do you really want to delete '" + item.Title + "'?";
-            var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            if (result == MessageBoxResult.Yes)
-            {
-                _data.Executables.Remove(item);
-            }
+            DeleteSelectedEntry();
         }
-
 
         private void SingleEntry_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -300,6 +337,41 @@ namespace Migo
             }
         }
         #endregion
-    }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            var pressedKey = e.Key;
+            Console.WriteLine("Pressed key: '{0}'", e.Key);
+            switch (e.Key)
+            {
+                case Key.Enter:
+                case Key.Right:
+                    // start application
+                    var item = lbShownCommands.SelectedItem as OneExe;
+                    StartProcess(item);
+                    break;
+                case Key.Space: // space does not work
+                case Key.Left:
+                case Key.E:
+                case Key.F2:
+                    // edit item
+                    EditSelectedEntry();
+                    break;
+                case Key.Subtract:
+                case Key.Delete:
+                case Key.Back: // backspace
+                case Key.OemMinus:
+                    // remove item
+                    DeleteSelectedEntry();
+                    break;
+                case Key.Insert:
+                    // add new item
+                    CreateOrEditEntry();
+                    break;
+                default:
+                    Console.WriteLine("Pressed key: '{0}'", e.Key);
+                    break;
+            }
+        }
+    }
 }
