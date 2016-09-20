@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
 
-namespace Migo
+namespace Lift
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -25,26 +25,24 @@ namespace Migo
         DataStore _data;
         CollectionView lbShownCommandsView;
         DragDropHelper dragHelper;
-        MigoJumplist jumplistHelper;
+        JumpListHelper jumplistHelper;
 
         public MainWindow()
         {
             InitializeComponent();
             _data = new DataStore();
-            _data.Load();
+            _data.LoadFromSettings();
 
-            jumplistHelper = new MigoJumplist();
+            jumplistHelper = new JumpListHelper();
 
             AddDataToListBox();
-            lbShownCommands.SelectedItem = lbShownCommands.Items.GetItemAt(0);
-            lbShownCommands.Focus();
             dragHelper = new DragDropHelper();
             this.Closed += MainWindow_Closed;
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
         {
-            _data.Save();
+            _data.SaveToSettings();
         }
 
         private void AddDataToListBox()
@@ -55,6 +53,9 @@ namespace Migo
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("Category");
             lbShownCommandsView.GroupDescriptions.Add(groupDescription);
             _data.Executables.CollectionChanged += Executables_CollectionChanged;
+
+            lbShownCommands.SelectedItem = lbShownCommands.Items.GetItemAt(0);
+            lbShownCommands.Focus();
         }
 
         void Executables_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -73,7 +74,7 @@ namespace Migo
         /// Will display the editWindow to either create a new Executable entry or edit an existing one
         /// </summary>
         /// <param name="item">Optional entry that should be edited</param>
-        private void CreateOrEditEntry(OneExe item = null)
+        private void CreateOrEditEntry(LiftItem item = null)
         {
             bool editMode = (item != null) ? true : false;
 
@@ -90,14 +91,14 @@ namespace Migo
 
         private void EditSelectedEntry()
         {
-            var item = lbShownCommands.SelectedItem as OneExe;
+            var item = lbShownCommands.SelectedItem as LiftItem;
             if (item == null) return;
             CreateOrEditEntry(item);
         }
 
         private void DeleteSelectedEntry()
         {
-            var item = lbShownCommands.SelectedItem as OneExe;
+            var item = lbShownCommands.SelectedItem as LiftItem;
             if (item == null) return;
             var text = "Do you really want to delete '" + item.Title + "'?";
             var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -107,7 +108,7 @@ namespace Migo
             }
         }
 
-        private void StartProcess(OneExe item)
+        private void StartProcess(LiftItem item)
         {
             if (item == null || String.IsNullOrWhiteSpace(item.FilePath)) return;
 
@@ -142,7 +143,7 @@ namespace Migo
             var uiElement = sender as System.Windows.Controls.Primitives.Selector;
             /* // not used
             if (lbShownCommands.SelectedIndex == -1) return;
-            var item = lbShownCommands.SelectedItem as OneExe;
+            var item = lbShownCommands.SelectedItem as LiftItem;
             if (item == null) return;
 
             CreateOrEditCommand(item);
@@ -154,7 +155,7 @@ namespace Migo
             var item = sender as ListBoxItem;
             if (item != null)
             {
-                var exe = item.Content as OneExe;
+                var exe = item.Content as LiftItem;
                 if (exe != null)
                 {
                     e.Handled = true;
@@ -171,9 +172,9 @@ namespace Migo
 
         private void SingleEntry_ContextMenu_Duplicate_Click(object sender, RoutedEventArgs e)
         {
-            var item = lbShownCommands.SelectedItem as OneExe;
+            var item = lbShownCommands.SelectedItem as LiftItem;
             if (item == null) return;
-            var clone = OneExe.Clone(item);
+            var clone = LiftItem.Clone(item);
             _data.Executables.Add(clone);
         }
 
@@ -190,7 +191,7 @@ namespace Migo
                 //sender as GroupItem
                 dragHelper.StartPosition = e.GetPosition(null);
                 dragHelper.ListBoxItem = sender as ListBoxItem;
-                dragHelper.Entry = dragHelper.ListBoxItem.Content as OneExe;
+                dragHelper.Entry = dragHelper.ListBoxItem.Content as LiftItem;
             }
         }
         #endregion
@@ -301,7 +302,7 @@ namespace Migo
         {
             var item = sender as ListBoxItem;
             if (item == null) return;
-            var exe = item.Content as OneExe;
+            var exe = item.Content as LiftItem;
             if (exe == null) return;
 
             e.Handled = true;
@@ -319,17 +320,17 @@ namespace Migo
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                OneExe exe;
+                LiftItem exe;
                 string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
                 foreach (string path in files)
                 {
-                    exe = new OneExe() { Category = category, FilePath = path };
+                    exe = new LiftItem() { Category = category, FilePath = path };
                     _data.Executables.Add(exe);
                 }
             }
             else if (e.Data.GetDataPresent("itemDragged"))
             {
-                OneExe dropped = e.Data.GetData("itemDragged") as OneExe;
+                LiftItem dropped = e.Data.GetData("itemDragged") as LiftItem;
                 // If the item would become the first in the list, an error is thrown (out of range) if the category is changed directly
                 _data.Executables.Remove(dropped);
                 dropped.Category = category;
@@ -347,7 +348,7 @@ namespace Migo
                 case Key.Enter:
                 case Key.Right:
                     // start application
-                    var item = lbShownCommands.SelectedItem as OneExe;
+                    var item = lbShownCommands.SelectedItem as LiftItem;
                     StartProcess(item);
                     break;
                 case Key.Space: // space does not work
@@ -371,6 +372,28 @@ namespace Migo
                 default:
                     Console.WriteLine("Pressed key: '{0}'", e.Key);
                     break;
+            }
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog.DefaultExt = ".xml";
+            saveFileDialog.AddExtension = true;
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                _data.ExportToFile(saveFileDialog.FileName);
+            }
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "Default export format (*.xml)|*.xml|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                _data.ImportFromFile(openFileDialog.FileName);
+                AddDataToListBox();
             }
         }
     }

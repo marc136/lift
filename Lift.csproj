@@ -55,12 +55,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataStore.cs" />
-    <Compile Include="DragDropHelper.cs" />
-    <Compile Include="MigoJumplist.cs" />
+    <Compile Include="Helpers\DragDropHelper.cs" />
+    <Compile Include="Helpers\JumpListHelper.cs" />
     <Compile Include="Windows\EditEntry.xaml.cs">
       <DependentUpon>EditEntry.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IconTool.cs" />
+    <Compile Include="Helpers\IconTool.cs" />
     <Compile Include="Windows\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -94,7 +94,7 @@
   <ItemGroup>
     <Compile Include="ObsoleteCode_Preserve.cs" />
     <Compile Include="WpfCrutches\ObservableSortedList.cs" />
-    <Compile Include="One.cs" />
+    <Compile Include="LiftItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

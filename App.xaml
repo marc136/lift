@@ -1,8 +1,8 @@
-﻿<Application x:Class="Migo.App"
+﻿<Application x:Class="Lift.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:properties="clr-namespace:Migo.Properties"
-             xmlns:local="clr-namespace:Migo">
+             xmlns:properties="clr-namespace:Lift.Properties"
+             xmlns:local="clr-namespace:Lift">
     <Application.Resources>
         <properties:Settings x:Key="Settings" />
     </Application.Resources>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Migo
+namespace Lift
 {
     class DragDropHelper
     {
@@ -11,6 +11,6 @@ namespace Migo
 
         public System.Windows.Controls.ListBoxItem ListBoxItem { get; set; }
 
-        public OneExe Entry { get; set; }
+        public LiftItem Entry { get; set; }
     }
 }

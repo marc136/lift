@@ -1,14 +1,14 @@
-﻿<Window x:Class="Migo.MainWindow"
+﻿<Window x:Class="Lift.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:Migo"
+        xmlns:local="clr-namespace:Lift"
         Title="Taskbar Launcher" 
         Height="460" MinHeight="200" Width="565" MinWidth="260"
         KeyDown="Window_KeyDown">
 
     <Window.Resources>
         <!--<DataTemplate x:Key="command1">-->
-        <DataTemplate DataType="{x:Type local:OneExe}">
+        <DataTemplate DataType="{x:Type local:LiftItem}">
             <Border Padding="5">
                 <StackPanel Orientation="Horizontal" MinWidth="150">
                     <Image Source="{Binding Path=ImageSource}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,5,0"/>
@@ -27,10 +27,8 @@
 
 
     <Grid>
-        <TextBlock Margin="10,10,90.4,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="44">
-            Use this list to change the jump list elements. The Entries in the task bar (aka Jumplist) are updated accordingly.
-        </TextBlock>
-        <Button x:Name="btnAddACommand" Content="Add file" Margin="0,35,10.4,0" VerticalAlignment="Top" Click="btnAddACommand_Click" HorizontalAlignment="Right" Width="75"/>
+        <TextBlock Margin="10,10,90.4,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="44"><Run Text="Use this list to change the jump list elements. The Entries in the task bar (aka Jumplist) are updated accordingly."/></TextBlock>
+        <Button x:Name="btnAddACommand" Content="Add file" Margin="0,35,100.4,0" VerticalAlignment="Top" Click="btnAddACommand_Click" HorizontalAlignment="Right" Width="75"/>
         <ListBox x:Name="lbShownCommands" Margin="10,59,10.4,9.8" Padding="5,0,0,0" 
                  AllowDrop="True" Drop="lbShownCommands_Drop"
                  MouseDoubleClick="lbShownCommands_DoubleClick"
@@ -38,7 +36,7 @@
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
-                    <DataTemplate>
+                        <DataTemplate>
                             <DockPanel HorizontalAlignment="Stretch">
                                 <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}" />
                             </DockPanel>
@@ -46,7 +44,7 @@
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
             </ListBox.GroupStyle>
-            
+
             <ListBox.Resources>
                 <!--Defines a context menu for the groups-->
                 <ContextMenu x:Key="GroupHeaderContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
@@ -78,5 +76,7 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
+        <Button x:Name="button" Content="Export" Margin="473,11,10.4,0" VerticalAlignment="Top" Click="button_Click"/>
+        <Button x:Name="button1" Content="Import" Margin="473,35,10.4,0" VerticalAlignment="Top" Click="button1_Click"/>
     </Grid>
 </Window>

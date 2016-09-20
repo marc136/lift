@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Migo {
+namespace Lift {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

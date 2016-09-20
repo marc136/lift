@@ -1,12 +1,12 @@
 ﻿using System.Windows.Shell;
 
-namespace Migo
+namespace Lift
 {
-    class MigoJumplist
+    class JumpListHelper
     {
-        public MigoJumplist() { }
+        public JumpListHelper() { }
 
-        public void Update(WpfCrutches.ObservableSortedList<OneExe> entries)
+        public void Update(WpfCrutches.ObservableSortedList<LiftItem> entries)
         {
             // save to task bar
             var thisJumpList = JumpList.GetJumpList(System.Windows.Application.Current);
@@ -21,19 +21,18 @@ namespace Migo
             thisJumpList.ShowFrequentCategory = false;
             thisJumpList.ShowRecentCategory = false;
             thisJumpList.JumpItems.Clear();
-
-            /**/
+            
             foreach (var exe in entries)
             {
                 var task = CreateJumpTaskItem(exe);
                 thisJumpList.JumpItems.Add(task);
-            }/**/
+            }
 
             thisJumpList.Apply();
             if (newJumpList) JumpList.SetJumpList(System.Windows.Application.Current, thisJumpList);
         }
 
-        private JumpTask CreateJumpTaskItem(OneExe entry)
+        private JumpTask CreateJumpTaskItem(LiftItem entry)
         {
             var result = new JumpTask
             {

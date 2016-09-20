@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using System.Windows.Shell;
 using System.Xml.Serialization;
 
-namespace Migo
+namespace Lift
 {
     [Serializable]
-    public class OneExe : INotifyPropertyChanged, IComparable<OneExe>
+    public class LiftItem : INotifyPropertyChanged, IComparable<LiftItem>
     {
         #region Properties
         [NonSerialized]
@@ -136,9 +136,9 @@ namespace Migo
         }
         #endregion
 
-        public OneExe() { }
+        public LiftItem() { }
 
-        public int CompareTo(OneExe other)
+        public int CompareTo(LiftItem other)
         {
             var value = this.Category.CompareTo(other.Category);
             if (value == 0)
@@ -148,9 +148,9 @@ namespace Migo
             return value;
         }
 
-        public static OneExe Clone(OneExe other)
+        public static LiftItem Clone(LiftItem other)
         {
-            var clone = new OneExe
+            var clone = new LiftItem
             {
                 FilePath = other.FilePath,
                 Arguments = other.Arguments,

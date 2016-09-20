@@ -12,15 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Migo
+namespace Lift
 {
     /// <summary>
     /// Interaction logic for EditEntry.xaml
     /// </summary>
     public partial class EditEntry : Window
     {
-        private OneExe _item;
-        public OneExe Entry { get { return _item; } }
+        private LiftItem _item;
+        public LiftItem Entry { get { return _item; } }
 
         public bool Success { get; private set; }
 
@@ -30,11 +30,11 @@ namespace Migo
             Success = false;
         }
 
-        public void UseItem(OneExe item = null)
+        public void UseItem(LiftItem item = null)
         {
             if (this._item != null) this._item.PropertyChanged -= _item_PropertyChanged;
 
-            this._item = (item != null) ? OneExe.Clone(item) : new OneExe();
+            this._item = (item != null) ? LiftItem.Clone(item) : new LiftItem();
 
             UpdateEntryFields();
             this._item.PropertyChanged += _item_PropertyChanged;
