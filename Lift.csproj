@@ -121,6 +121,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>MiSettings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
