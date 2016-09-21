@@ -22,7 +22,7 @@ namespace Lift
     /// </summary>
     public partial class MainWindow : Window
     {
-        DataStore _data;
+        Persistence.DataStore _data;
         CollectionView lbShownCommandsView;
         DragDropHelper dragHelper;
         JumpListHelper jumplistHelper;
@@ -30,7 +30,7 @@ namespace Lift
         public MainWindow()
         {
             InitializeComponent();
-            _data = new DataStore();
+            _data = new Persistence.DataStore();
             _data.LoadFromSettings();
 
             jumplistHelper = new JumpListHelper();

@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Lift.Persistence" GeneratedClassName="MiSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LiftItems" Type="System.String" Scope="User">
+      <Value Profile="(Default)">horst</Value>
+    </Setting>
+    <Setting Name="Options" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>
