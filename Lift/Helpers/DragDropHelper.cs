@@ -11,6 +11,6 @@ namespace Lift
 
         public System.Windows.Controls.ListBoxItem ListBoxItem { get; set; }
 
-        public LiftItem Entry { get; set; }
+        public Data.LiftItem Entry { get; set; }
     }
 }

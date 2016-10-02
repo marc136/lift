@@ -1,14 +1,16 @@
-﻿<Window x:Class="Lift.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:Lift"
-        Title="Taskbar Launcher" 
-        Height="460" MinHeight="200" Width="565" MinWidth="260"
-        KeyDown="Window_KeyDown">
+﻿<Page x:Class="Lift.View.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:view="clr-namespace:Lift.View"
+      xmlns:model="clr-namespace:Lift.Data"
+      mc:Ignorable="d" 
+      d:DesignHeight="400" d:DesignWidth="300"
+      Title="MainPage" KeepAlive="True" KeyDown="Page_KeyDown">
 
-    <Window.Resources>
-        <!--<DataTemplate x:Key="command1">-->
-        <DataTemplate DataType="{x:Type local:LiftItem}">
+    <Page.Resources>
+        <DataTemplate DataType="{x:Type model:LiftItem}">
             <Border Padding="5">
                 <StackPanel Orientation="Horizontal" MinWidth="150">
                     <Image Source="{Binding Path=ImageSource}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,5,0"/>
@@ -23,16 +25,23 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
-    </Window.Resources>
-
+    </Page.Resources>
 
     <Grid>
-        <TextBlock Margin="10,10,90.4,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="44"><Run Text="Use this list to change the jump list elements. The Entries in the task bar (aka Jumplist) are updated accordingly."/></TextBlock>
-        <Button x:Name="btnAddACommand" Content="Add file" Margin="0,35,100.4,0" VerticalAlignment="Top" Click="btnAddACommand_Click" HorizontalAlignment="Right" Width="75"/>
-        <ListBox x:Name="lbShownCommands" Margin="10,59,10.4,9.8" Padding="5,0,0,0" 
-                 AllowDrop="True" Drop="lbShownCommands_Drop"
-                 MouseDoubleClick="lbShownCommands_DoubleClick"
-                 MouseMove="lbShowCommands_MouseMove">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <UniformGrid Grid.Row="0" Rows="1" Columns="3">
+            <Button x:Name="btnOptions" Content="Options" Margin="6" Click="btnOptions_Click" KeyboardNavigation.TabIndex="1"/>
+            <Button x:Name="btnEdit" Content="Edit" Margin="6" Click="btnEdit_Click" KeyboardNavigation.TabIndex="2"/>
+            <Button x:Name="btnAdd" Content="Add" Margin="6" Click="btnAdd_Click" KeyboardNavigation.TabIndex="3"/>
+        </UniformGrid>
+
+        <ListBox x:Name="lbLiftItems" Margin="6" Padding="5,0,0,0" Grid.Row="1" KeyboardNavigation.TabIndex="0"
+                 ItemsSource="{Binding }"
+                 AllowDrop="True" Drop="lbLiftItems_DropOn" MouseMove="lbLiftItems_MouseMove" >
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -61,22 +70,19 @@
 
                 <!--Defines a context menu for each item in the ListBox-->
                 <ContextMenu x:Key="ListBoxItemContextMenu">
-                    <MenuItem Header="Edit" Click="SingleEntry_ContextMenu_Edit_Click"/>
-                    <MenuItem Header="Clone" Click="SingleEntry_ContextMenu_Duplicate_Click"/>
-                    <MenuItem Header="Delete" Click="SingleEntry_ContextMenu_Delete_Click"/>
+                    <MenuItem Header="Edit" Click="ListBoxItem_ContextMenu_Edit_Click"/>
+                    <MenuItem Header="Clone" Click="ListBoxItem_ContextMenu_Duplicate_Click"/>
+                    <MenuItem Header="Delete" Click="ListBoxItem_ContextMenu_Delete_Click"/>
                 </ContextMenu>
 
                 <!-- ListBox Item (SingleEntry) -->
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="ContextMenu" Value="{StaticResource ListBoxItemContextMenu}"/>
                     <Setter Property="AllowDrop" Value="True"/>
-                    <EventSetter Event="Drop" Handler="SingleEntry_DropOn"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="SingleEntry_DoubleClick"/>
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SingleEntry_MouseLeftButtonDown"/>
+                    <EventSetter Event="Drop" Handler="SingleItem_DropOn"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItem_MouseLeftButtonDown"/>
                 </Style>
             </ListBox.Resources>
         </ListBox>
-        <Button x:Name="button" Content="Export" Margin="473,11,10.4,0" VerticalAlignment="Top" Click="button_Click"/>
-        <Button x:Name="button1" Content="Import" Margin="473,35,10.4,0" VerticalAlignment="Top" Click="button1_Click"/>
     </Grid>
-</Window>
+</Page>

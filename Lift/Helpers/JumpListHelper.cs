@@ -1,12 +1,11 @@
-﻿using System.Windows.Shell;
+﻿using System.Collections.Generic;
+using System.Windows.Shell;
 
-namespace Lift
+namespace Lift.Helpers
 {
     class JumpListHelper
     {
-        public JumpListHelper() { }
-
-        public void Update(WpfCrutches.ObservableSortedList<LiftItem> entries)
+        public static void Update(IEnumerable<Data.LiftItem> entries)
         {
             // save to task bar
             var thisJumpList = JumpList.GetJumpList(System.Windows.Application.Current);
@@ -22,9 +21,9 @@ namespace Lift
             thisJumpList.ShowRecentCategory = false;
             thisJumpList.JumpItems.Clear();
             
-            foreach (var exe in entries)
+            foreach (var entry in entries)
             {
-                var task = CreateJumpTaskItem(exe);
+                var task = CreateJumpTaskItem(entry);
                 thisJumpList.JumpItems.Add(task);
             }
 
@@ -32,7 +31,7 @@ namespace Lift
             if (newJumpList) JumpList.SetJumpList(System.Windows.Application.Current, thisJumpList);
         }
 
-        private JumpTask CreateJumpTaskItem(LiftItem entry)
+        private static JumpTask CreateJumpTaskItem(Data.LiftItem entry)
         {
             var result = new JumpTask
             {
@@ -58,7 +57,7 @@ namespace Lift
             return result;
         }
 
-        public void ClearJumpList()
+        public static void ClearJumpList()
         {
             var jumpList = JumpList.GetJumpList(System.Windows.Application.Current);
             if (jumpList != null)

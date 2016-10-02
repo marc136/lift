@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using System.Windows.Shell;
 using System.Xml.Serialization;
 
-namespace Lift
+namespace Lift.Data
 {
     [Serializable]
-    public class LiftItem : INotifyPropertyChanged, IComparable<LiftItem>
+    public class LiftItem : INotifyPropertyChanged, IComparable<LiftItem>, IEquatable<LiftItem>, ICloneable
     {
         #region Properties
         [NonSerialized]
@@ -27,7 +27,7 @@ namespace Lift
                 }
                 return _image;
             }
-            set { _image = value; }
+            set { _image = value; NotifyPropertyChanged("ImageSource"); }
         }
 
         private string _arguments;
@@ -39,7 +39,7 @@ namespace Lift
                 if (value != _arguments)
                 {
                     _arguments = value;
-                    NotifyPropertyChanged("ProgressText");
+                    NotifyPropertyChanged(nameof(Arguments));
                 }
             }
         }
@@ -47,22 +47,22 @@ namespace Lift
         private string _filePath;
         public string FilePath
         {
-            get { return string.IsNullOrWhiteSpace(_filePath) ? "none given" : _filePath; }
+            get { return string.IsNullOrWhiteSpace(_filePath) ? "" : _filePath; }
             set
             {
                 if (value != this._filePath)
                 {
-                    this._filePath = value;
-                    this.Title = "";
-                    this.Hint = "";
-                    this.ImageSource = null;
-                    NotifyPropertyChanged("FilePath");
+                    _filePath = value;
+                    Title = "";
+                    Hint = "";
+                    ImageSource = null;
+                    NotifyPropertyChanged(nameof(FilePath));
                 }
             }
         }
 
-        public string FileName { get { return Path.GetFileName(FilePath); } }
-        public string FolderPath { get { return Path.GetDirectoryName(FilePath); } }
+        public string FileName => Path.GetFileName(FilePath);
+        public string FolderPath => Path.GetDirectoryName(FilePath);
 
         private string _category;
         public string Category
@@ -73,7 +73,7 @@ namespace Lift
                 if (value != this._category)
                 {
                     this._category = value;
-                    NotifyPropertyChanged("Category");
+                    NotifyPropertyChanged(nameof(Category));
                 }
             }
         }
@@ -87,9 +87,15 @@ namespace Lift
         {
             get
             {
-                if (string.IsNullOrEmpty(_title))
+                if (string.IsNullOrWhiteSpace(_title))
                 {
-                    _title = (string.IsNullOrWhiteSpace(this._filePath)) ? "" : Path.GetFileName(this._filePath);
+                    // generate a title from a file path
+                    var next = Path.GetFileName(FilePath);
+                    if (next != _title)
+                    {
+                        _title = next;
+                        NotifyPropertyChanged(nameof(Title));
+                    }
                 }
                 return _title;
             }
@@ -98,7 +104,7 @@ namespace Lift
                 if (value != this._title)
                 {
                     this._title = value;
-                    NotifyPropertyChanged("Title");
+                    NotifyPropertyChanged(nameof(Title));
                 }
             }
         }
@@ -111,15 +117,16 @@ namespace Lift
                 if (string.IsNullOrWhiteSpace(_hint) && !string.IsNullOrWhiteSpace(_filePath))
                 {
                     _hint = "Start " + FileName;
+                    NotifyPropertyChanged(nameof(Hint));
                 }
                 return _hint;
             }
             set
             {
-                if (value != this._hint)
+                if (value != _hint)
                 {
-                    this._hint = value;
-                    NotifyPropertyChanged("Hint");
+                    _hint = value;
+                    NotifyPropertyChanged(nameof(Hint));
                 }
             }
         }
@@ -127,16 +134,13 @@ namespace Lift
         #endregion
         #region Notify Property Changes
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String info)
+        private void NotifyPropertyChanged(string info)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
         #endregion
 
-        public LiftItem() { }
+        public LiftItem() {}
 
         public int CompareTo(LiftItem other)
         {
@@ -148,6 +152,11 @@ namespace Lift
             return value;
         }
 
+        public bool Equals(LiftItem other)
+        {
+            return FilePath == other?.FilePath && Arguments == other?.Arguments && Category == other?.Category && Title == other?.Title && Hint == other?.Hint;
+        }
+
         public static LiftItem Clone(LiftItem other)
         {
             var clone = new LiftItem
@@ -157,10 +166,24 @@ namespace Lift
                 Category = other.Category,
                 Title = other.Title,
                 Hint = other.Hint,
-                ImageSource = other.ImageSource
+                //ImageSource = other.ImageSource
                 //Icon = other.Icon
             };
             return clone;
         }
+
+        public object Clone()
+        {
+            var clone = new LiftItem
+            {
+                FilePath = this.FilePath,
+                Arguments = this.Arguments,
+                Category = this.Category,
+                Title = this.Title,
+                Hint = this.Hint,
+            };
+            return clone;
+        }
+
     }
 }

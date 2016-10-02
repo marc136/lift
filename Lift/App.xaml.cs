@@ -13,12 +13,12 @@ namespace Lift
     /// </summary>
     public partial class App : Application
     {
-        private MainWindow _mainWindow;
+        private Window _mainWindow;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            _mainWindow = new MainWindow();
+            _mainWindow = new View.ContainerWindow();
             Console.WriteLine("OnStartup was called");
             _mainWindow.Show();
         }

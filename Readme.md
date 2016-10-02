@@ -12,8 +12,6 @@ It worked for me on Windows 10 build 14393.187.
 
 ## Copyright and Licensing
 ### Third party code
-I am using the ObservableSortedList code, which is copyrighted by Roman Starkov. The code is [available on BitBucket](https://bitbucket.org/rstarkov/wpfcrutches/src/tip/ObservableSortedList.cs?fileviewer=file-view-default) without licensing information, and located here in _WpfCrutches/ObservableSortedList.cs_.
-
 Inside _Helpers/IconTool.cs_ I am using code based on [a tutorial by Diptimaya Patra](http://www.c-sharpcorner.com/uploadfile/dpatra/get-icon-from-filename-in-wpf/) to retrieve the icon of a filename. And code [written by Bradley Smith](http://www.c-sharpcorner.com/uploadfile/dpatra/get-icon-from-filename-in-wpf/) to extract the icon of an executable assigned to a specific file type.  
 
 ### My own code

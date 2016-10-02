@@ -7,8 +7,12 @@
 --- file (open with default app)
 --- folder (open in explorer)
 - use 1 window and multiple pages/frames
+- allow to drag file into edit frame
 - set default action (click on icon in task bar)
 -- add edit commands to Jumplist (highest priority) if needed
+- default icon if icon could not be retrieved (e.g. command shell icon)
+- when editing a filepath with dialog, start from the files current folder
+- truncate long filepaths
 
 #done
 -- export list to file (xml)

@@ -1,0 +1,68 @@
+﻿<PageFunction
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+    x:Class="Lift.View.EditItem"
+    x:TypeArguments="model:LiftItem"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lift.View"
+    xmlns:model="clr-namespace:Lift.Data"
+    mc:Ignorable="d"
+    d:DesignHeight="334.4" d:DesignWidth="300"
+    Title="EditItem" RemoveFromJournal="True"
+    KeyDown="PageFunction_KeyDown">
+    <Grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnBack" Content="Back" Margin="0,0,6,0.2" Padding="6"  Click="btnCancel_Click"/>
+            <TextBlock Text="Edit Item" Grid.Column="1" Margin="6,0,8,0" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="14"/>
+
+        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <Button x:Name="btnSelectFile" Content="select file" Click="btnSelectFile_Click" HorizontalAlignment="Right" MaxWidth="100" Padding="6, 2"></Button>
+                </StackPanel>
+                <TextBlock Text="Filepath" VerticalAlignment="Center" Grid.Row="1"/>
+                <TextBox Text="{Binding FilePath}" Grid.Row="2"/>
+                <TextBlock Text="Arguments (optional)" VerticalAlignment="Center" Grid.Row="3"/>
+                <TextBox Text="{Binding Arguments}" Grid.Row="4"/>
+            
+                <TextBlock Text="Title" VerticalAlignment="Center" Grid.Row="5" Margin="0,16,0,0"/>
+                <TextBox Text="{Binding Title}" Grid.Row="6"/>
+                <TextBlock Text="Hint (displayed on hover)" VerticalAlignment="Center" Grid.Row="7"/>
+                <TextBox Text="{Binding Hint}" Grid.Row="8"/>
+
+                <TextBlock Text="Category" VerticalAlignment="Center" Grid.Row="9" Margin="0,16,0,0"/>
+                <TextBox Text="{Binding Category}" Grid.Row="10"/>
+            </Grid>
+        </ScrollViewer>
+        <UniformGrid Grid.Row="3" Margin="8" Rows="1" Columns="2">
+            <Button x:Name="btnCancel" Content="Cancel" Margin="0,0,8,0" Click="btnCancel_Click" Padding="0,2"/>
+            <Button x:Name="btnSave" Content="Save" Margin="8,0,0,0" Click="btnSave_Click" Padding="0,2"/>
+        </UniformGrid>
+    </Grid>
+</PageFunction>
