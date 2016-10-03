@@ -40,7 +40,7 @@
         </UniformGrid>
 
         <ListBox x:Name="lbLiftItems" Margin="6" Padding="5,0,0,0" Grid.Row="1" KeyboardNavigation.TabIndex="0"
-                 ItemsSource="{Binding }"
+                 ItemsSource="{Binding }" d:DataContext="{d:DesignData Source=/DummyData/MainPage.xaml}"
                  AllowDrop="True" Drop="lbLiftItems_DropOn" MouseMove="lbLiftItems_MouseMove" >
             <ListBox.GroupStyle>
                 <GroupStyle>

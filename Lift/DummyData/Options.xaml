@@ -1,0 +1,5 @@
+﻿<m:Options
+    xmlns:m="clr-namespace:Lift.Data"
+    PromptOnDelete="True"
+    >
+</m:Options>

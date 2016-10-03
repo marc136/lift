@@ -1,0 +1,8 @@
+﻿<m:LiftItem
+    xmlns:m="clr-namespace:Lift.Data"
+    FilePath="C:\bin\Mikogo-viewer.exe"
+    Arguments="-s 000000930"
+    Category="None"
+    Title="Join daily session"
+    >
+</m:LiftItem>

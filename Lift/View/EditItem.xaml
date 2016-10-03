@@ -12,7 +12,7 @@
     d:DesignHeight="334.4" d:DesignWidth="300"
     Title="EditItem" RemoveFromJournal="True"
     KeyDown="PageFunction_KeyDown">
-    <Grid">
+    <Grid d:DataContext="{d:DesignData Source=/DummyData/SingleLiftItem.xaml}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>

@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="300"
     Title="Options" RemoveFromJournal="True">
-    <Grid>
+    <Grid d:DataContext="{d:DesignData Source=/DummyData/Options.xaml}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
