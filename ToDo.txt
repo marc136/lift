@@ -1,12 +1,9 @@
 ﻿#todo
-- create dedicated options page
--- toggle 'Do you really want to delete' dialog
-- update UI
--- 3 buttons for adding items
---- executable (with arguments)
---- file (open with default app)
---- folder (open in explorer)
-- use 1 window and multiple pages/frames
+- toggle 'Do you really want to delete' dialog
+- 3 buttons for adding items
+-- executable (with arguments)
+-- file (open with default app)
+-- folder (open in explorer)
 - allow to drag file into edit frame
 - set default action (click on icon in task bar)
 -- add edit commands to Jumplist (highest priority) if needed
@@ -15,6 +12,8 @@
 - truncate long filepaths
 
 #done
+- use 1 window and multiple pages/frames
+- create dedicated options page
 -- export list to file (xml)
 -- import list from file (xml)
 - Keyboard interaction
