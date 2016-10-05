@@ -72,6 +72,15 @@ namespace Lift.View
             }
         }
 
+        private void btnSelectFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Item.FilePath = dialog.SelectedPath;
+            }
+        }
+
         private void PageFunction_KeyDown(object sender, KeyEventArgs e)
         {
             var key = e.Key;

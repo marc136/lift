@@ -43,8 +43,9 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0">
-                    <Button x:Name="btnSelectFile" Content="select file" Click="btnSelectFile_Click" HorizontalAlignment="Right" MaxWidth="100" Padding="6, 2"></Button>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button x:Name="btnSelectFile" Content="select file" Click="btnSelectFile_Click" HorizontalAlignment="Right" MaxWidth="100" Padding="6, 2" Margin="0,0,8,0"/>
+                    <Button x:Name="btnSelectFolder" Content="select folder" Click="btnSelectFolder_Click" HorizontalAlignment="Right" MaxWidth="100" Padding="6, 2"/>
                 </StackPanel>
                 <TextBlock Text="Filepath" VerticalAlignment="Center" Grid.Row="1"/>
                 <TextBox Text="{Binding FilePath}" Grid.Row="2"/>

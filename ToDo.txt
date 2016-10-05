@@ -1,27 +1,34 @@
 ﻿#todo
 - toggle 'Do you really want to delete' dialog
-- 3 buttons for adding items
--- executable (with arguments)
--- file (open with default app)
--- folder (open in explorer)
-- allow to drag file into edit frame
+- allow to drag file/folder into edit frame
 - set default action (click on icon in task bar)
 -- add edit commands to Jumplist (highest priority) if needed
 - default icon if icon could not be retrieved (e.g. command shell icon)
 - when editing a filepath with dialog, start from the files current folder
 - truncate long filepaths
+- translations
+- Select if user data is saved in app folder or in appdata
+-- check if folder exists in appdata
+-- or if settings.json exists in app folder
+- application icon
 
 #done
+2016-10-03:
+- add select folder button to edit page
+2016-10-02:
 - use 1 window and multiple pages/frames
 - create dedicated options page
--- export list to file (xml)
--- import list from file (xml)
+2016-09-21:
+- export list to file (xml)
+- import list from file (xml)
+2016-08-13:
 - Keyboard interaction
 -- trigger delete after hitting delete, backspace
 -- trigger edit mask after hitting F2, e, left
 -- trigger create mask after hitting 'insert'
 -- change selection with up/down
 -- start exe/open file with enter, right
+2015:
 - if non-exe files are added the jumplist icon is loaded from the file extension (using registry)
 - user may change an item's category with drag&drop
 - user may rename a category
@@ -44,6 +51,7 @@
 - display list of exes
 - sort list of exes
 
+
 #Steps
 
 #Further features
@@ -54,30 +62,5 @@
 - change exe icon
 - change category as an inline element in the group header
 
-
-
-#outline
-
-Use cases:
-- Select exe
-  - add arguments
-  - add category
-  - start from task bar
-
-- Watch exe (indirect)
-  - select exe, 
-    - store hash
-    - copy it to another destination
-  - add arguments, category
-  - start from task bar
-  - if app is opened, check if source file has changed
-    - if it has, inform user that file was updated and copy it again
-
----
-
-If app is started first time:
-- Select if user data is saved in app folder or in appdata
-  - check if folder exists in appdata
-  - or if settings.json exists in app folder
 
 ---
