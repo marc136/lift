@@ -32,13 +32,12 @@ namespace Lift.View
 
         public MainPage()
         {
-            Options = new Data.Options();
-
             InitializeComponent();
             SetWindowTitle();
             dragHelper = new DragDropHelper();
 
-            LiftItems = Persistence.DataStore.LoadLiftItems();
+            Options = Persistence.OptionsStore.Load();
+            LiftItems = Persistence.LiftItemsStore.Load();
             DataContext = LiftItems;
 
             // move this block to XAML, see http://www.galasoft.ch/mydotnet/articles/article-2007081301.aspx
@@ -68,6 +67,7 @@ namespace Lift.View
             {
                 SetWindowTitle(); // update the window title after returning to this page
                 Options = e.Result;
+                Persistence.OptionsStore.Save(Options);
             };
 
             this.NavigationService.Navigate(optionPage);
@@ -270,7 +270,7 @@ namespace Lift.View
         private void UpdateLiftItems()
         {
             itemCollectionView.Refresh();
-            Persistence.DataStore.SaveToSettings(LiftItems);
+            Persistence.LiftItemsStore.Save(LiftItems);
 
             Helpers.JumpListHelper.Update(itemCollectionView.Cast<Data.LiftItem>());
             //Helpers.JumpListHelper.Update(LiftItems);

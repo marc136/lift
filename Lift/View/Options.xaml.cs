@@ -48,7 +48,7 @@ namespace Lift.View
             saveFileDialog.AddExtension = true;
             if (saveFileDialog.ShowDialog() == true)
             {
-                Persistence.DataStore.ExportToFile(saveFileDialog.FileName, _liftItems);
+                Persistence.LiftItemsStore.ExportToFile(saveFileDialog.FileName, _liftItems);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using Lift.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -10,14 +9,14 @@ using System.Xml.Serialization;
 
 namespace Lift.Persistence
 {
-    public class DataStore
+    internal class LiftItemsStore
     {
         private static XmlSerializer NewLiftItemsSerializer()
         {
-            return new XmlSerializer(typeof(LiftItems));
+            return new XmlSerializer(typeof(Data.LiftItems));
         }
 
-        public static LiftItems LoadLiftItems()
+        internal static Data.LiftItems Load()
         {
             var result = LoadLiftItemsFromSettings();
             // Add some Default entries if none exist
@@ -28,15 +27,15 @@ namespace Lift.Persistence
             return result;
         }
 
-        private static LiftItems LoadLiftItemsFromSettings()
+        private static Data.LiftItems LoadLiftItemsFromSettings()
         {
-            LiftItems result = null;
+            Data.LiftItems result = null;
             string loaded = Persistence.MiSettings.Default.LiftItems;
             try
             {
                 using (var reader = new StringReader(loaded))
                 {
-                    result = NewLiftItemsSerializer().Deserialize(reader) as LiftItems;
+                    result = NewLiftItemsSerializer().Deserialize(reader) as Data.LiftItems;
                 }
             }
             catch (InvalidOperationException) { }
@@ -45,14 +44,14 @@ namespace Lift.Persistence
             return result;
         }
 
-        public static LiftItems ImportFromFile(string filepath)
+        internal static Data.LiftItems ImportFromFile(string filepath)
         {
-            LiftItems result = null;
+            Data.LiftItems result = null;
             try
             {
                 using (var reader = new StreamReader(filepath))
                 {
-                    result = NewLiftItemsSerializer().Deserialize(reader) as LiftItems;
+                    result = NewLiftItemsSerializer().Deserialize(reader) as Data.LiftItems;
                     //SaveToSettings();
                 }
             }
@@ -72,7 +71,12 @@ namespace Lift.Persistence
             return result;
         }
 
-        public static void SaveToSettings(LiftItems liftItems)
+        internal static void Save(Data.LiftItems liftItems)
+        {
+            SaveToSettings(liftItems);
+        }
+
+        private static void SaveToSettings(Data.LiftItems liftItems)
         {
             string str;
             using (var writer = new StringWriter())
@@ -85,7 +89,7 @@ namespace Lift.Persistence
             Persistence.MiSettings.Default.Save();
         }
 
-        public static void ExportToFile(string filepath, LiftItems liftItems)
+        internal static void ExportToFile(string filepath, Data.LiftItems liftItems)
         {
             try
             {
@@ -100,7 +104,7 @@ namespace Lift.Persistence
             }
         }
 
-        private static LiftItems GenerateSampleEntries()
+        private static Data.LiftItems GenerateSampleEntries()
         {
             var result = new Lift.Data.LiftItems();
             result.Add(new Data.LiftItem() { FilePath = @"C:\bin\Mikogo-host.exe", Category = "My first category" });

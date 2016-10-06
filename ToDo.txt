@@ -1,19 +1,20 @@
 ﻿#todo
-- toggle 'Do you really want to delete' dialog
 - allow to drag file/folder into edit frame
-- set default action (click on icon in task bar)
--- add edit commands to Jumplist (highest priority) if needed
 - default icon if icon could not be retrieved (e.g. command shell icon)
 - when editing a filepath with dialog, start from the files current folder
-- truncate long filepaths
+- truncate long filepaths on main page
 - translations
+- application icon
+- set default action (click on icon in task bar)
+-- add edit commands to Jumplist (highest priority) if needed
 - Select if user data is saved in app folder or in appdata
 -- check if folder exists in appdata
 -- or if settings.json exists in app folder
-- application icon
 
 #done
-2016-10-03:
+- persist options
+- toggle 'Do you really want to delete' dialog
+2016-10-05:
 - add select folder button to edit page
 2016-10-02:
 - use 1 window and multiple pages/frames

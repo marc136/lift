@@ -74,9 +74,10 @@
     <Compile Include="Data\LiftItems.cs" />
     <Compile Include="Data\Options.cs" />
     <Compile Include="Helpers\StartLiftItem.cs" />
-    <Compile Include="Persistence\DataStore.cs" />
+    <Compile Include="Persistence\LiftItemsStore.cs" />
     <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\JumpListHelper.cs" />
+    <Compile Include="Persistence\OptionsStore.cs" />
     <Compile Include="View\ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>

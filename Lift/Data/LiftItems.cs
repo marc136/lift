@@ -27,7 +27,7 @@ namespace Lift.Data
 
         internal void ClearAndImportFromFile(string filepath)
         {
-            var importedItems = Persistence.DataStore.ImportFromFile(filepath);
+            var importedItems = Persistence.LiftItemsStore.ImportFromFile(filepath);
             bool succesfulImport = true;
             if (importedItems == null || importedItems.Count == 0)
             {
