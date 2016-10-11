@@ -7,6 +7,7 @@
 - visual feedback
 -- drag on group/item from outside lift
 -- drag on group/item from inside lift
+- allow to select multiple items in the listbox (useful for moving or deleting)
 - set default action (click on icon in task bar)
 -- add edit commands to Jumplist (highest priority) if needed
 - Select if user data is saved in app folder or in appdata

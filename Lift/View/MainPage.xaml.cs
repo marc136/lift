@@ -60,6 +60,50 @@ namespace Lift.View
             Application.Current.MainWindow.Title = "Lift starter";
         }
 
+        private void UpdateLiftItems()
+        {
+            itemCollectionView.Refresh();
+            Persistence.LiftItemsStore.Save(LiftItems);
+
+            Helpers.JumpListHelper.Update(itemCollectionView.Cast<Data.LiftItem>());
+            //Helpers.JumpListHelper.Update(LiftItems);
+        }
+
+        private void StartProcess(Data.LiftItem item)
+        {
+            Helpers.StartLiftItem.StartProcess(item);
+        }
+
+        private void DeleteSelectedItem()
+        {
+            var item = lbLiftItems.SelectedItem as Data.LiftItem;
+            if (item == null) return;
+
+            if (Options.PromptOnDelete)
+            {
+                var text = "Do you really want to delete '" + item.Title + "'?";
+                var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                if (result != MessageBoxResult.Yes) return;
+            }
+
+            LiftItems.Remove(item);
+            UpdateLiftItems();
+        }
+
+        private void PromptNewCategoryName(string category)
+        {
+            string newCategoryName = InputDialog.Prompt("Edit category name", "Edit", category);
+
+            if (!String.IsNullOrWhiteSpace(newCategoryName))
+            {
+                LiftItems.RenameCategory(category, newCategoryName);
+
+                UpdateLiftItems();
+            }
+        }
+
+
+        #region button click events
         private void btnOptions_Click(object btnSender, RoutedEventArgs btnEvent)
         {
             var optionPage = new View.Options(Options, LiftItems);
@@ -73,10 +117,17 @@ namespace Lift.View
             this.NavigationService.Navigate(optionPage);
         }
 
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            selectedItem = null;
+            EditItem(null);
+        }
+
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             EditSelectedItem();
         }
+        #endregion
 
         private void EditSelectedItem()
         {
@@ -100,11 +151,144 @@ namespace Lift.View
             this.NavigationService.Navigate(edit);
         }
 
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        #region keyboard events
+        private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            selectedItem = null;
-            EditItem(null);
+            Key pressedKey = e.Key;
+            Console.WriteLine("Pressed key: '{0}'", e.Key);
+            switch (e.Key)
+            {
+                case Key.Enter:
+                case Key.Right:
+                    // start application
+                    var item = lbLiftItems.SelectedItem as Data.LiftItem;
+                    StartProcess(item);
+                    break;
+                case Key.Space: // space does not work
+                case Key.Left:
+                case Key.E:
+                case Key.F2:
+                    // edit item
+                    EditSelectedItem();
+                    break;
+                case Key.Subtract:
+                case Key.Delete:
+                case Key.Back: // backspace
+                case Key.OemMinus:
+                    // remove item
+                    DeleteSelectedItem();
+                    break;
+                case Key.Insert:
+                    // add new item
+                    EditItem(null);
+                    break;
+                default:
+                    Console.WriteLine("Pressed key: '{0}'", e.Key);
+                    break;
+            }
         }
+        #endregion
+
+        #region Group header element click events (doubleclick and context menu)
+        private void GroupHeader_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount >= 2)
+            {// Cannot use DoubleClick event because it is triggered after a double click on a ListBoxItem (and e.Handled does not work)
+                GroupHeader_RenameGroupItem(sender as GroupItem, e);
+            }
+        }
+
+        private void GroupHeader_ContextMenu_Rename_Click(object sender, RoutedEventArgs e)
+        {
+            // retrieve the category name
+            var menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                var menu = menuItem.CommandParameter as ContextMenu;
+                if (menu != null)
+                {
+                    GroupHeader_RenameGroupItem(menu.PlacementTarget as GroupItem, e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// retrieves the category name and calls PromptNewCategoryName(category)
+        /// </summary>
+        /// <param name="item">GroupItem of the ListBox</param>
+        private void GroupHeader_RenameGroupItem(GroupItem item, RoutedEventArgs e)
+        {
+            if (item != null && !e.Handled)
+            {
+                var category = (item.Content as CollectionViewGroup)?.Name as string;
+                if (category != null)
+                {
+                    //this is triggered even if only clicking on list item
+                    e.Handled = true;
+                    PromptNewCategoryName(category);
+                }
+            }
+        }
+        #endregion
+
+        #region Context menu for a single ListBoxItem
+        private void ListBoxItem_ContextMenu_Edit_Click(object sender, RoutedEventArgs e)
+        {
+            EditSelectedItem();
+        }
+
+        private void ListBoxItem_ContextMenu_Duplicate_Click(object sender, RoutedEventArgs e)
+        {
+            LiftItems.AddClone(lbLiftItems.SelectedItem as Data.LiftItem);
+            UpdateLiftItems();
+        }
+
+        private void ListBoxItem_ContextMenu_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSelectedItem();
+        }
+        #endregion
+
+        private void ListBoxItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var listBoxItem = sender as ListBoxItem;
+            if (listBoxItem == null) return;
+
+            if (e.ClickCount == 1)
+            { // dragging a LiftItem might start
+                dragHelper.StartPosition = e.GetPosition(null);
+                dragHelper.ListBoxItem = listBoxItem;
+                dragHelper.Entry = dragHelper.ListBoxItem.Content as Data.LiftItem;
+            }
+            else
+            {
+                var liftItem = listBoxItem.Content as Data.LiftItem;
+                if (liftItem != null)
+                {
+                    e.Handled = true;
+                    selectedItem = liftItem;
+                    EditSelectedItem();
+                }
+            }
+        }
+
+        private void lbLiftItems_MouseMove(object sender, MouseEventArgs e)
+        {
+            // If at least one list element is being dragged
+            if (e.LeftButton == MouseButtonState.Pressed && dragHelper.Entry != null)
+            {
+                Point mousePos = e.GetPosition(null);
+                Vector diff = dragHelper.StartPosition - mousePos;
+
+                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    DataObject dragData = new DataObject("itemDragged", dragHelper.Entry);
+                    DragDrop.DoDragDrop(dragHelper.ListBoxItem, dragData, DragDropEffects.Move);
+                }
+            }
+        }
+
 
         /**
          * A user may drop files onto 
@@ -167,182 +351,5 @@ namespace Lift.View
         }
         #endregion
 
-        private void lbLiftItems_MouseMove(object sender, MouseEventArgs e)
-        {
-            // If at least one list element is being dragged
-            if (e.LeftButton == MouseButtonState.Pressed && dragHelper.Entry != null)
-            {
-                Point mousePos = e.GetPosition(null);
-                Vector diff = dragHelper.StartPosition - mousePos;
-
-                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
-                {
-                    DataObject dragData = new DataObject("itemDragged", dragHelper.Entry);
-                    DragDrop.DoDragDrop(dragHelper.ListBoxItem, dragData, DragDropEffects.Move);
-                }
-            }
-        }
-
-        private void Page_KeyDown(object sender, KeyEventArgs e)
-        {
-            Key pressedKey = e.Key;
-            Console.WriteLine("Pressed key: '{0}'", e.Key);
-            switch (e.Key)
-            {
-                case Key.Enter:
-                case Key.Right:
-                    // start application
-                    var item = lbLiftItems.SelectedItem as Data.LiftItem;
-                    StartProcess(item);
-                    break;
-                case Key.Space: // space does not work
-                case Key.Left:
-                case Key.E:
-                case Key.F2:
-                    // edit item
-                    EditSelectedItem();
-                    break;
-                case Key.Subtract:
-                case Key.Delete:
-                case Key.Back: // backspace
-                case Key.OemMinus:
-                    // remove item
-                    DeleteSelectedItem();
-                    break;
-                case Key.Insert:
-                    // add new item
-                    EditItem(null);
-                    break;
-                default:
-                    Console.WriteLine("Pressed key: '{0}'", e.Key);
-                    break;
-            }
-        }
-
-        #region Group header element click events
-        private void GroupHeader_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount >= 2)
-            {// Cannot use DoubleClick event because it is triggered after a double click on a ListBoxItem (and e.Handled does not work)
-                GroupHeader_RenameGroupItem(sender as GroupItem, e);
-            }
-        }
-
-        private void GroupHeader_ContextMenu_Rename_Click(object sender, RoutedEventArgs e)
-        {
-            // retrieve the category name
-            var menuItem = sender as MenuItem;
-            if (menuItem != null)
-            {
-                var menu = menuItem.CommandParameter as ContextMenu;
-                if (menu != null)
-                {
-                    GroupHeader_RenameGroupItem(menu.PlacementTarget as GroupItem, e);
-                }
-            }
-        }
-
-        /// <summary>
-        /// retrieves the category name and calls PromptNewCategoryName(category)
-        /// </summary>
-        /// <param name="item">GroupItem of the ListBox</param>
-        private void GroupHeader_RenameGroupItem(GroupItem item, RoutedEventArgs e)
-        {
-            if (item != null && !e.Handled)
-            {
-                var category = (item.Content as CollectionViewGroup)?.Name as string;
-                if (category != null)
-                {
-                    //this is triggered even if only clicking on list item
-                    e.Handled = true;
-                    PromptNewCategoryName(category);
-                }
-            }
-        }
-        #endregion
-
-        private void StartProcess(Data.LiftItem item)
-        {
-            Helpers.StartLiftItem.StartProcess(item);
-        }
-
-        private void UpdateLiftItems()
-        {
-            itemCollectionView.Refresh();
-            Persistence.LiftItemsStore.Save(LiftItems);
-
-            Helpers.JumpListHelper.Update(itemCollectionView.Cast<Data.LiftItem>());
-            //Helpers.JumpListHelper.Update(LiftItems);
-        }
-
-        private void DeleteSelectedItem()
-        {
-            var item = lbLiftItems.SelectedItem as Data.LiftItem;
-            if (item == null) return;
-
-            if (Options.PromptOnDelete)
-            {
-                var text = "Do you really want to delete '" + item.Title + "'?";
-                var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-                if (result != MessageBoxResult.Yes) return;
-            }
-
-            LiftItems.Remove(item);
-            UpdateLiftItems();
-        }
-
-        private void PromptNewCategoryName(string category)
-        {
-            string newCategoryName = InputDialog.Prompt("Edit category name", "Edit", category);
-
-            if (!String.IsNullOrWhiteSpace(newCategoryName))
-            {
-                LiftItems.RenameCategory(category, newCategoryName);
-
-                UpdateLiftItems();
-            }
-        }
-
-        private void ListBoxItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var listBoxItem = sender as ListBoxItem;
-            if (listBoxItem == null) return;
-
-            if (e.ClickCount == 1)
-            { // dragging a LiftItem might start
-                dragHelper.StartPosition = e.GetPosition(null);
-                dragHelper.ListBoxItem = listBoxItem;
-                dragHelper.Entry = dragHelper.ListBoxItem.Content as Data.LiftItem;
-            }
-            else
-            {
-                var liftItem = listBoxItem.Content as Data.LiftItem;
-                if (liftItem != null)
-                {
-                    e.Handled = true;
-                    selectedItem = liftItem;
-                    EditSelectedItem();
-                }
-            }
-        }
-
-        #region Context menu for a single ListBoxItem
-        private void ListBoxItem_ContextMenu_Edit_Click(object sender, RoutedEventArgs e)
-        {
-            EditSelectedItem();
-        }
-
-        private void ListBoxItem_ContextMenu_Duplicate_Click(object sender, RoutedEventArgs e)
-        {
-            LiftItems.AddClone(lbLiftItems.SelectedItem as Data.LiftItem);
-            UpdateLiftItems();
-        }
-
-        private void ListBoxItem_ContextMenu_Delete_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteSelectedItem();
-        }
-        #endregion
     }
 }
