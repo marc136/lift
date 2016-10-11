@@ -2,7 +2,6 @@
 - allow to drag file/folder into edit frame
 - default icon if icon could not be retrieved (e.g. command shell icon)
 - when editing a filepath with dialog, start from the files current folder
-- truncate long filepaths on main page
 - translations
 - application icon
 - visual feedback
@@ -15,6 +14,9 @@
 -- or if settings.json exists in app folder
 
 # done
+2016-10-11
+- truncate long filepaths on main page
+-- change ListBoxItem template from 2 StackPanels to 1 Grid
 2016-10-08
 - persist options
 - toggle 'Do you really want to delete' dialog

@@ -12,17 +12,24 @@
     <Page.Resources>
         <DataTemplate DataType="{x:Type model:LiftItem}">
             <Border Padding="5">
-                <StackPanel Orientation="Horizontal" MinWidth="150">
-                    <Image Source="{Binding Path=ImageSource}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,5,0"/>
-                    <StackPanel Orientation="Vertical" >
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=Title}" FontSize="11"/>
-                            <TextBlock Text="{Binding Path=Arguments}" FontSize="11" Foreground="DarkSlateGray" Margin="5,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock Text="{Binding Path=FilePath}" FontSize="10" Foreground="DarkGray" Margin="0,2,0,0"/>
-                    </StackPanel>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"  Source="{Binding Path=ImageSource}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,5,0"/>
 
-                </StackPanel>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Title}" FontSize="11"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Arguments}" FontSize="11" Foreground="DarkSlateGray" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Path=FilePath}" TextTrimming="CharacterEllipsis" FontSize="10" Foreground="DarkGray" Margin="0,2,0,0"/>
+                </Grid>
             </Border>
         </DataTemplate>
     </Page.Resources>
@@ -41,7 +48,7 @@
 
         <ListBox x:Name="lbLiftItems" Margin="6" Padding="5,0,0,0" Grid.Row="1" KeyboardNavigation.TabIndex="0"
                  ItemsSource="{Binding }" d:DataContext="{d:DesignData Source=/DummyData/MainPage.xaml}"
-                 AllowDrop="True" Drop="lbLiftItems_DropOn" MouseMove="lbLiftItems_MouseMove" >
+                 AllowDrop="True" Drop="lbLiftItems_DropOn" MouseMove="lbLiftItems_MouseMove" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -77,6 +84,9 @@
 
                 <!-- ListBox Item (SingleEntry) -->
                 <Style TargetType="{x:Type ListBoxItem}">
+                    <!--<Setter Property="Background" Value="Beige"/>-->
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="ContextMenu" Value="{StaticResource ListBoxItemContextMenu}"/>
                     <Setter Property="AllowDrop" Value="True"/>
                     <EventSetter Event="Drop" Handler="SingleItem_DropOn"/>
