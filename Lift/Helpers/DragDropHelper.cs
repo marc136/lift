@@ -1,16 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows;
 
 namespace Lift
 {
     class DragDropHelper
     {
-        public System.Windows.Point StartPosition { get; set; }
+        public bool DraggingHasStarted { get { return StartPosition != null; } }
 
-        public System.Windows.Controls.ListBoxItem ListBoxItem { get; set; }
+        public Point StartPosition { get; private set; }
 
-        public Data.LiftItem Entry { get; set; }
+        public void StartDraggingAtPoint(Point point)
+        {
+            StartPosition = point;
+        }
+
+        public bool MinimalDragDistanceWasExceeded(Point point)
+        {
+            if (!DraggingHasStarted) return false;
+            Vector diff = StartPosition - point;
+
+            return (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance);
+        }
     }
 }

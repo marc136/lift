@@ -53,6 +53,9 @@ namespace Lift.View
             };
             lbLiftItems.SelectedIndex = 0;
             lbLiftItems.Focus();
+
+            //lbLiftItems.DragEnter += new DragEventHandler(lbLiftItems_DragEnter);
+            //lbLiftItems.DragOver += new DragEventHandler(lbLiftItems_DragOver);
         }
 
         private void SetWindowTitle()
@@ -201,14 +204,11 @@ namespace Lift.View
         private void GroupHeader_ContextMenu_Rename_Click(object sender, RoutedEventArgs e)
         {
             // retrieve the category name
-            var menuItem = sender as MenuItem;
-            if (menuItem != null)
+            var menu = (sender as MenuItem)?.CommandParameter as ContextMenu;
+            var group = menu?.PlacementTarget as GroupItem;
+            if (group != null)
             {
-                var menu = menuItem.CommandParameter as ContextMenu;
-                if (menu != null)
-                {
-                    GroupHeader_RenameGroupItem(menu.PlacementTarget as GroupItem, e);
-                }
+                GroupHeader_RenameGroupItem(group, e);
             }
         }
 
@@ -254,13 +254,7 @@ namespace Lift.View
             var listBoxItem = sender as ListBoxItem;
             if (listBoxItem == null) return;
 
-            if (e.ClickCount == 1)
-            { // dragging a LiftItem might start
-                dragHelper.StartPosition = e.GetPosition(null);
-                dragHelper.ListBoxItem = listBoxItem;
-                dragHelper.Entry = dragHelper.ListBoxItem.Content as Data.LiftItem;
-            }
-            else
+            if (e.ClickCount > 1)
             {
                 var liftItem = listBoxItem.Content as Data.LiftItem;
                 if (liftItem != null)
@@ -272,23 +266,37 @@ namespace Lift.View
             }
         }
 
-        private void lbLiftItems_MouseMove(object sender, MouseEventArgs e)
+        #region drag events
+        private void lbLiftItems_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // If at least one list element is being dragged
-            if (e.LeftButton == MouseButtonState.Pressed && dragHelper.Entry != null)
-            {
-                Point mousePos = e.GetPosition(null);
-                Vector diff = dragHelper.StartPosition - mousePos;
+            var osrc = e.OriginalSource;
+            var src = e.Source;
+            var ctx = (e.OriginalSource as FrameworkElement)?.DataContext;
 
-                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
-                {
-                    DataObject dragData = new DataObject("itemDragged", dragHelper.Entry);
-                    DragDrop.DoDragDrop(dragHelper.ListBoxItem, dragData, DragDropEffects.Move);
-                }
+            dragHelper.StartDraggingAtPoint(e.GetPosition(null));
+        }
+
+        private void lbLiftItems_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                dragHelper.DraggingHasStarted &&
+                dragHelper.MinimalDragDistanceWasExceeded(e.GetPosition(null)))
+            {
+                var obj = new DataObject("LiftItems", (System.Collections.IList)lbLiftItems.SelectedItems);
+                DragDrop.DoDragDrop(sender as FrameworkElement, obj, DragDropEffects.Move);
             }
         }
 
+        private void lbLiftItems_DragEnter(object sender, DragEventArgs e)
+        {
+            Console.WriteLine(@"DragEnter sender ${sender}");
+        }
+
+        private void lbLiftItems_DragOver(object sender, DragEventArgs e)
+        {
+            Console.WriteLine(@"DragOver sender ${sender}");
+        }
+        #endregion
 
         /**
          * A user may drop files onto 
@@ -300,7 +308,7 @@ namespace Lift.View
         private void lbLiftItems_DropOn(object sender, DragEventArgs e)
         {
             // will be added to the 'none' category
-            DropEvent_OnCategory("", e);
+            HandleDropEvent_OnCategory("", e);
         }
 
         private void GroupHeader_DropOn(object sender, DragEventArgs e)
@@ -308,9 +316,8 @@ namespace Lift.View
             var context = (sender as GroupItem)?.DataContext as CollectionViewGroup;
             if (context == null) return;
 
-            e.Handled = true;
             string category = context.Name as string;
-            DropEvent_OnCategory(category, e);
+            HandleDropEvent_OnCategory(category, e);
         }
 
         private void SingleItem_DropOn(object sender, DragEventArgs e)
@@ -318,36 +325,56 @@ namespace Lift.View
             var item = (sender as ListBoxItem)?.Content as Data.LiftItem;
             if (item == null) return;
 
-            e.Handled = true;
-            string category = item.Category;
-            DropEvent_OnCategory(category, e);
+            HandleDropEvent_OnCategory(item.Category, e);
         }
 
-        private void DropEvent_OnCategory(string category, DragEventArgs e)
+        private void HandleDropEvent_OnCategory(string category, DragEventArgs e)
         {
             var src = e.OriginalSource;
             //string[] dataFormats = e.Data.GetFormats(false);
             //string[] dataFormatsWithConvertibleTo = e.Data.GetFormats(true);
 
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (TryToHandleAsFileDrop(category, e) ||
+                TryToHandleAsLiftItems(category, e))
             {
-                var files = e.Data.GetData(DataFormats.FileDrop) as string[];
-                foreach (string path in files)
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Triggered for instance if files or folders are dragged from Windows Explorer
+        /// </summary>
+        /// <returns>true it could handle the drop event</returns>
+        private bool TryToHandleAsFileDrop(string category, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return false;
+
+            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            foreach (string path in files)
+            {
+                LiftItems.Add(new Data.LiftItem() { Category = category, FilePath = path });
+            }
+            UpdateLiftItems();
+            return true;
+        }
+
+        private bool TryToHandleAsLiftItems(string category, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent("LiftItems")) return false;
+            var draggedItems = (e.Data.GetData("LiftItems") as System.Collections.IList)?.Cast<Data.LiftItem>();
+            if (draggedItems == null) return false;
+
+            foreach (Data.LiftItem draggedItem in draggedItems)
+            {
+                var item = draggedItem as Data.LiftItem;
+                if (item != null)
                 {
-                    LiftItems.Add(new Data.LiftItem() { Category = category, FilePath = path });
+                    item.Category = category;
                 }
-                UpdateLiftItems();
             }
-            else if (e.Data.GetDataPresent("itemDragged"))
-            {
-                var dropped = e.Data.GetData("itemDragged") as Data.LiftItem;
-                // @todo no remove and add, but update instead
-                // If the item would become the first in the list, an error is thrown (out of range) if the category is changed directly
-                LiftItems.Remove(dropped);
-                dropped.Category = category;
-                LiftItems.Add(dropped);
-                UpdateLiftItems();
-            }
+            UpdateLiftItems();
+
+            return true;
         }
         #endregion
 

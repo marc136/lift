@@ -22,7 +22,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"  Source="{Binding Path=ImageSource}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,5,0"/>
 
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Title}" FontSize="11"/>
@@ -47,8 +47,10 @@
         </UniformGrid>
 
         <ListBox x:Name="lbLiftItems" Margin="6" Padding="5,0,0,0" Grid.Row="1" KeyboardNavigation.TabIndex="0"
-                 ItemsSource="{Binding }" d:DataContext="{d:DesignData Source=/DummyData/MainPage.xaml}"
-                 AllowDrop="True" Drop="lbLiftItems_DropOn" MouseMove="lbLiftItems_MouseMove" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ItemsSource="{Binding }" d:DataContext="{d:DesignData Source=/DummyData/MainPage.xaml}"
+            SelectionMode="Extended" AllowDrop="True" Drop="lbLiftItems_DropOn"
+                 PreviewMouseLeftButtonDown="lbLiftItems_PreviewMouseLeftButtonDown" PreviewMouseMove="lbLiftItems_PreviewMouseMove">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

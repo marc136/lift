@@ -1,5 +1,4 @@
 ﻿# todo
-- allow to drag file/folder into edit frame
 - default icon if icon could not be retrieved (e.g. command shell icon)
 - when editing a filepath with dialog, start from the files current folder
 - translations
@@ -8,6 +7,7 @@
 -- drag on group/item from outside lift
 -- drag on group/item from inside lift
 - allow to select multiple items in the listbox (useful for moving or deleting)
+-- drag multiple items to a new category
 - set default action (click on icon in task bar)
 -- add edit commands to Jumplist (highest priority) if needed
 - Select if user data is saved in app folder or in appdata
@@ -15,6 +15,8 @@
 -- or if settings.json exists in app folder
 
 # done
+2016-11-01
+- allow to drag file/folder into edit frame
 2016-10-11
 - truncate long filepaths on main page
 -- change ListBoxItem template from 2 StackPanels to 1 Grid

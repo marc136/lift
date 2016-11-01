@@ -185,5 +185,9 @@ namespace Lift.Data
             return clone;
         }
 
+        public override string ToString()
+        {
+            return Title.ToString();
+        }
     }
 }

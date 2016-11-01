@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     d:DesignHeight="334.4" d:DesignWidth="300"
     Title="EditItem" RemoveFromJournal="True"
-    KeyDown="PageFunction_KeyDown">
+    KeyDown="PageFunction_KeyDown" Drop="DropFileOnEditPage" AllowDrop="True">
     <Grid d:DataContext="{d:DesignData Source=/DummyData/SingleLiftItem.xaml}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -47,8 +47,8 @@
                     <Button x:Name="btnSelectFile" Content="select file" Click="btnSelectFile_Click" HorizontalAlignment="Right" MaxWidth="100" Padding="6, 2" Margin="0,0,8,0"/>
                     <Button x:Name="btnSelectFolder" Content="select folder" Click="btnSelectFolder_Click" HorizontalAlignment="Right" MaxWidth="100" Padding="6, 2"/>
                 </StackPanel>
-                <TextBlock Text="Filepath" VerticalAlignment="Center" Grid.Row="1"/>
-                <TextBox Text="{Binding FilePath}" Grid.Row="2"/>
+                <TextBlock Text="Filepath" VerticalAlignment="Center" Grid.Row="1" AllowDrop="True"/>
+                <TextBox Text="{Binding FilePath}" Grid.Row="2" AllowDrop="True" Drop="DropFileOnEditPage"/>
                 <TextBlock Text="Arguments (optional)" VerticalAlignment="Center" Grid.Row="3"/>
                 <TextBox Text="{Binding Arguments}" Grid.Row="4"/>
             

@@ -99,5 +99,18 @@ namespace Lift.View
                     break;
             }
         }
+
+        // drop an element -> set file path
+        /// <summary>
+        /// Triggered for instance if files or folders are dragged from Windows Explorer
+        /// </summary>
+        /// <returns>true it could handle the drop event</returns>
+        private void DropFileOnEditPage(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
+
+            var paths = e.Data.GetData(DataFormats.FileDrop) as string[];
+            Item.FilePath = paths[0];
+        }
     }
 }
