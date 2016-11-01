@@ -2,7 +2,6 @@
 - default icon if icon could not be retrieved (e.g. command shell icon)
 - when editing a filepath with dialog, start from the files current folder
 - translations
-- application icon
 - visual feedback
 -- drag on group/item from outside lift
 -- drag on group/item from inside lift
@@ -17,6 +16,7 @@
 # done
 2016-11-01
 - allow to drag file/folder into edit frame
+- application icon
 2016-10-11
 - truncate long filepaths on main page
 -- change ListBoxItem template from 2 StackPanels to 1 Grid

@@ -38,7 +38,7 @@
                     <Button x:Name="btnImportList" Content="import from file" MaxWidth="100" Padding="6, 2" Click="btnImportList_Click" />
                 </StackPanel>
 
-                <TextBlock Text="Sorting" VerticalAlignment="Center" Grid.Row="1" Margin="0,12,0,0" />
+                <!--<TextBlock Text="Sorting" VerticalAlignment="Center" Grid.Row="1" Margin="0,12,0,0" />-->
                 <!--<TextBox Text="{Binding Sorting}" Grid.Row="2"/>-->
 
                 <TextBlock Text="Other options" VerticalAlignment="Center" Grid.Row="3" Margin="0,12,0,0"/>
