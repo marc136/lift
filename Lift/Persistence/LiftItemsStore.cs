@@ -22,7 +22,8 @@ namespace Lift.Persistence
             // Add some Default entries if none exist
             if (result == null || result.Count == 0)
             {
-                result = GenerateSampleEntries();
+                //result = GenerateSampleEntries(); // not feasible anymore
+                result = new Data.LiftItems();
             }
             return result;
         }
@@ -107,11 +108,15 @@ namespace Lift.Persistence
         private static Data.LiftItems GenerateSampleEntries()
         {
             var result = new Lift.Data.LiftItems();
-            result.Add(new Data.LiftItem() { FilePath = @"C:\bin\Mikogo-host.exe", Category = "My first category" });
+            result.Add(new Data.LiftItem() { FilePath = @"C:\bin\Mikogo-host.exe", Category = "My files" });
             result.Add(new Data.LiftItem() { FilePath = @"C:\bin\Mikogo-host.exe", Arguments = "-s 000000930" });
             result.Add(new Data.LiftItem() { FilePath = @"C:\bin\Mikogo-viewer.exe", Arguments = "-s 000000930" });
             result.Add(new Data.LiftItem() { FilePath = @"C:\bin\SessionPlayer.exe", Category = "Second category" });
-
+            /*
+            string folderName = Environment.GetFolderPath(Environment.SpecialFolder.Recent);
+            DirectoryInfo recentFolder = new DirectoryInfo(folderName);
+            FileInfo[] files = recentFolder.GetFiles();
+            /**/
             return result;
         }
     }
