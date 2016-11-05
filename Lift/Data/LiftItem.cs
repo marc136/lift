@@ -91,6 +91,7 @@ namespace Lift.Data
                 {
                     // generate a title from a file path
                     var next = Path.GetFileName(FilePath);
+                    if (next.EndsWith(".lnk", StringComparison.CurrentCultureIgnoreCase)) next = next.Substring(0, next.Length - 4);
                     if (next != _title)
                     {
                         _title = next;
