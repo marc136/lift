@@ -21,7 +21,6 @@ namespace Lift.View
     /// </summary>
     public partial class MainPage : Page
     {
-
         public Data.LiftItems LiftItems { get; private set; }
         protected Data.Options Options { get; private set; }
 
@@ -54,6 +53,8 @@ namespace Lift.View
             lbLiftItems.SelectedIndex = 0;
             lbLiftItems.Focus();
 
+            // set jumplist items in case they were changed outside of the program
+            Helpers.JumpListHelper.Update(itemCollectionView.Cast<Data.LiftItem>());
             //lbLiftItems.DragEnter += new DragEventHandler(lbLiftItems_DragEnter);
             //lbLiftItems.DragOver += new DragEventHandler(lbLiftItems_DragOver);
         }
@@ -63,9 +64,9 @@ namespace Lift.View
             Application.Current.MainWindow.Title = "Lift starter";
         }
 
-        private void UpdateLiftItems()
+        private void UpdateLiftItems(bool refresh = true)
         {
-            itemCollectionView.Refresh();
+            if (refresh) itemCollectionView.Refresh();
             Persistence.LiftItemsStore.Save(LiftItems);
 
             Helpers.JumpListHelper.Update(itemCollectionView.Cast<Data.LiftItem>());
