@@ -1,6 +1,6 @@
 ﻿# todo
 - default icon if icon could not be retrieved (e.g. command shell icon)
-- when editing a filepath with dialog, start from the files current folder
+- display icon for folder
 - translations
 - visual feedback
 -- drag on group/item from outside lift
@@ -14,6 +14,11 @@
 -- or if settings.json exists in app folder
 
 # done
+2016-11-06
+- when editing a filepath with dialog, start from the files current folder
+- don't show .lnk file extension when generating titles
+- reduce filesize of executable
+- add new jumplist items
 2016-11-01
 - allow to drag file/folder into edit frame
 - application icon

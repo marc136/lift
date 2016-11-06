@@ -22,15 +22,26 @@ namespace Lift.View
     {
         private Data.LiftItem Item;
         private Data.LiftItem InitialItem;
+        private bool EditMode = true; // set to false if a new item is being added
 
         public EditItem(Data.LiftItem item)
         {
-            Item = (item != null) ? (Data.LiftItem)item.Clone() : new Data.LiftItem();
+            if (item == null)
+            {
+                EditMode = false;
+                Item = new Data.LiftItem();
+                Application.Current.MainWindow.Title = "Add Lift item";
+            }
+            else
+            {
+                Item = (Data.LiftItem)item.Clone();
+                Application.Current.MainWindow.Title = "Edit Lift item";
+            }
+
             InitialItem = item;
             InitializeComponent();
             btnSave.Focus();
             DataContext = Item;
-            Application.Current.MainWindow.Title = "Edit Lift item";
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -65,6 +76,7 @@ namespace Lift.View
         private void btnSelectFile_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            if (EditMode) openFileDialog.InitialDirectory = Item.FolderPath;
             openFileDialog.Filter = "Applications (*.exe, ...)|*.exe;*.group;*.bat;*.cmd;*.ps*;*.application;*.gadget;*.com;*.cpl;*.msc;*.jar|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
