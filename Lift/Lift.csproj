@@ -81,6 +81,9 @@
     <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\JumpListHelper.cs" />
     <Compile Include="Persistence\OptionsStore.cs" />
+    <Compile Include="Resources\Localization\LocalizationHelper.cs" />
+    <Compile Include="Resources\Localization\TranslationStrings.cs" />
+    <Compile Include="ViewModels\OptionsPage.cs" />
     <Compile Include="View\ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>
@@ -153,7 +156,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="..\Readme.md">
@@ -191,6 +194,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="lift.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Translations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

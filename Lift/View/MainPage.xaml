@@ -41,9 +41,9 @@
         </Grid.RowDefinitions>
 
         <UniformGrid Grid.Row="0" Rows="1" Columns="3">
-            <Button x:Name="btnOptions" Content="Options" Margin="6" Click="btnOptions_Click" KeyboardNavigation.TabIndex="1"/>
-            <Button x:Name="btnEdit" Content="Edit" Margin="6" Click="btnEdit_Click" KeyboardNavigation.TabIndex="2"/>
-            <Button x:Name="btnAdd" Content="Add" Margin="6" Click="btnAdd_Click" KeyboardNavigation.TabIndex="3"/>
+            <Button x:Name="btnOptions" Content="{Binding Translations[MainPage.Buttons.Options], FallbackValue='Options'}" Margin="6" Click="btnOptions_Click" KeyboardNavigation.TabIndex="1"/>
+            <Button x:Name="btnEdit" Content="{Binding Translations[MainPage.Buttons.Edit], FallbackValue='Edit'}" Margin="6" Click="btnEdit_Click" KeyboardNavigation.TabIndex="2"/>
+            <Button x:Name="btnAdd" Content="{Binding Translations[MainPage.Buttons.Add], FallbackValue='Add'}" Margin="6" Click="btnAdd_Click" KeyboardNavigation.TabIndex="3"/>
         </UniformGrid>
 
         <ListBox x:Name="lbLiftItems" Margin="6" Padding="5,0,0,0" Grid.Row="1" KeyboardNavigation.TabIndex="0"
@@ -66,7 +66,7 @@
             <ListBox.Resources>
                 <!--Defines a context menu for the groups-->
                 <ContextMenu x:Key="GroupHeaderContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                    <MenuItem Header="Rename" Click="GroupHeader_ContextMenu_Rename_Click"
+                    <MenuItem Header="{Binding Translations[MainPage.ContextMenu.Rename], FallbackValue='Rename'}" Click="GroupHeader_ContextMenu_Rename_Click"
                               CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                 </ContextMenu>
 
@@ -79,9 +79,9 @@
 
                 <!--Defines a context menu for each item in the ListBox-->
                 <ContextMenu x:Key="ListBoxItemContextMenu">
-                    <MenuItem Header="Edit" Click="ListBoxItem_ContextMenu_Edit_Click"/>
-                    <MenuItem Header="Clone" Click="ListBoxItem_ContextMenu_Duplicate_Click"/>
-                    <MenuItem Header="Delete" Click="ListBoxItem_ContextMenu_Delete_Click"/>
+                    <MenuItem Header="{Binding Translations[MainPage.ContextMenu.Edit], FallbackValue='Edit'}" Click="ListBoxItem_ContextMenu_Edit_Click"/>
+                    <MenuItem Header="{Binding Translations[MainPage.ContextMenu.Clone], FallbackValue='Clone'}" Click="ListBoxItem_ContextMenu_Duplicate_Click"/>
+                    <MenuItem Header="{Binding Translations[MainPage.ContextMenu.Delete], FallbackValue='Delete'}" Click="ListBoxItem_ContextMenu_Delete_Click"/>
                 </ContextMenu>
 
                 <!-- ListBox Item (SingleEntry) -->

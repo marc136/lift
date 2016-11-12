@@ -15,20 +15,31 @@ using System.Windows.Shapes;
 
 namespace Lift.View
 {
+    using ViewModel;
+    using Translations = Resources.Localization.Translations;
+
     /// <summary>
     /// Interaction logic for Options.xaml
     /// </summary>
     public partial class Options : PageFunction<Data.Options>
     {
         private Data.LiftItems _liftItems;
-        private Data.Options _options;
+        private OptionsPage internalData;
 
-        public Options(Data.Options options, Data.LiftItems liftItems)
+        public Options(Data.Options options, Translations translations, Data.LiftItems liftItems)
         {
             InitializeComponent();
-            _options = options;
-            DataContext = options;
+
+            System.Windows.Application.Current.MainWindow.Title = translations["Options.Title"];
+            internalData = new OptionsPage { Options = options, Translations = translations };
+            DataContext = internalData;
+
             _liftItems = liftItems;
+
+            foreach (System.Globalization.CultureInfo lang in internalData.Translations.SupportedLanguages)
+            {
+                cbLanguage.Items.Add(lang.TwoLetterISOLanguageName);
+            }
         }
 
         private void btnImportList_Click(object sender, RoutedEventArgs e)
@@ -54,9 +65,28 @@ namespace Lift.View
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            var returnObject = new ReturnEventArgs<Data.Options>(_options);
+            var returnObject = new ReturnEventArgs<Data.Options>(internalData.Options);
             // Call onreturn method
             OnReturn(returnObject);
+        }
+
+        private void cbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var lang = (sender as ComboBox).SelectedItem as string;
+            internalData.Translations.ChangeLocale(lang);
+            /*
+            string[] languages = new string[] { "en", "de" };
+            if (languages.Contains(lang))
+            {
+                DataContext.Translations
+                System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(lang);
+            }
+            Application.Current.MainWindow.Title = Lift.Properties.Resources.Title;
+            var res = Lift.Properties.Resources.ResourceManager;
+            
+            var t = res.GetString("Title");
+            Console.WriteLine("getString(title) returned ", t);/**/
+
         }
     }
 }

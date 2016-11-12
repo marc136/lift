@@ -23,6 +23,7 @@ namespace Lift.View
     {
         public Data.LiftItems LiftItems { get; private set; }
         protected Data.Options Options { get; private set; }
+        protected Resources.Localization.Translations Translations { get; private set; }
 
         private CollectionView itemCollectionView;
 
@@ -32,14 +33,17 @@ namespace Lift.View
         public MainPage()
         {
             InitializeComponent();
-            SetWindowTitle();
+
             dragHelper = new DragDropHelper();
 
             Options = Persistence.OptionsStore.Load();
             LiftItems = Persistence.LiftItemsStore.Load();
             DataContext = LiftItems;
 
-            // move this block to XAML, see http://www.galasoft.ch/mydotnet/articles/article-2007081301.aspx
+            Translations = new Lift.Resources.Localization.Translations();
+            SetWindowTitle();
+
+            // TODO: move this block to XAML, see http://www.galasoft.ch/mydotnet/articles/article-2007081301.aspx
             itemCollectionView = (CollectionView)CollectionViewSource.GetDefaultView(LiftItems);
             itemCollectionView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
             itemCollectionView.SortDescriptions.Add(new SortDescription("Category", ListSortDirection.Descending));
@@ -61,7 +65,7 @@ namespace Lift.View
 
         private void SetWindowTitle()
         {
-            Application.Current.MainWindow.Title = "Lift starter";
+            Application.Current.MainWindow.Title = Translations["MainPage.Title"];
         }
 
         private void UpdateLiftItems(bool refresh = true)
@@ -110,7 +114,7 @@ namespace Lift.View
         #region button click events
         private void btnOptions_Click(object btnSender, RoutedEventArgs btnEvent)
         {
-            var optionPage = new View.Options(Options, LiftItems);
+            var optionPage = new View.Options(Options, Translations, LiftItems);
             optionPage.Return += (sender, e) =>
             {
                 SetWindowTitle(); // update the window title after returning to this page

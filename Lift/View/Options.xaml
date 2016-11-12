@@ -7,9 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lift.Data"
+    xmlns:mrc="clr-namespace:Lift.Properties"
     mc:Ignorable="d"
-    d:DesignHeight="300" d:DesignWidth="300"
-    Title="Options" RemoveFromJournal="True">
+    d:DesignHeight="300" d:DesignWidth="300" RemoveFromJournal="True">
     <Grid d:DataContext="{d:DesignData Source=/DummyData/Options.xaml}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -20,8 +20,8 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnBack" Content="Back" Margin="0,0,6,0.2" Padding="6" RenderTransformOrigin="0.505,0.5" Click="btnBack_Click"/>
-            <TextBlock Text="Options" Grid.Column="1" Margin="6,0,8,0" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="14"/>
+            <Button x:Name="Back" Content="{Binding Path=Translations[Options.Buttons.Back], FallbackValue='btnBack'}" Margin="0,0,6,0.2" Padding="6" RenderTransformOrigin="0.505,0.5" Click="btnBack_Click"/>
+            <TextBlock Text="{Binding Path=Translations[Options.Title], FallbackValue='Options'}" Grid.Column="1" Margin="6,0,8,0" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="14"/>
         </Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
             <Grid Margin="8">
@@ -32,17 +32,24 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft">
-                    <Button x:Name="btnExportList" Content="export to file" MaxWidth="100" Padding="6, 2" Margin="0,0,8,0" Click="btnExportList_Click"/>
-                    <Button x:Name="btnImportList" Content="import from file" MaxWidth="100" Padding="6, 2" Click="btnImportList_Click" />
+                    <Button x:Name="btnExportList" Content="{Binding Path=Translations[Options.Buttons.Export], FallbackValue='export to file'}" Padding="6, 2" Margin="0,0,8,0" Click="btnExportList_Click"/>
+                    <Button x:Name="btnImportList" Content="{Binding Path=Translations[Options.Buttons.Import], FallbackValue='import from file'}" Padding="6, 2" Click="btnImportList_Click" />
                 </StackPanel>
 
                 <!--<TextBlock Text="Sorting" VerticalAlignment="Center" Grid.Row="1" Margin="0,12,0,0" />-->
                 <!--<TextBox Text="{Binding Sorting}" Grid.Row="2"/>-->
 
-                <TextBlock Text="Other options" VerticalAlignment="Center" Grid.Row="3" Margin="0,12,0,0"/>
-                <CheckBox Grid.Row="4" Content="Prompt before deleting an item" IsChecked="{Binding PromptOnDelete}"/>
+                <TextBlock Text="{Binding Path=Translations[Options.Language], FallbackValue='Language'}" VerticalAlignment="Center" Grid.Row="3" Margin="0,12,0,0"/>
+                <ComboBox x:Name="cbLanguage" Grid.Row="4" VerticalAlignment="Top" SelectionChanged="cbLanguage_SelectionChanged"/>
+                
+                <TextBlock Text="{Binding Path=Translations[Options.Other], FallbackValue='Other'}" VerticalAlignment="Center" Grid.Row="5" Margin="0,12,0,0"/>
+                <CheckBox Grid.Row="6" Content="{Binding Path=Translations[Options.PromptOnDelete], FallbackValue='Prompt before deleting an item'}" IsChecked="{Binding Options.PromptOnDelete}"/>
             </Grid>
         </ScrollViewer>
     </Grid>
