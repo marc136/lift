@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 namespace Lift.View
 {
+    using System.Globalization;
     using ViewModel;
     using Translations = Resources.Localization.Translations;
 
@@ -34,12 +35,31 @@ namespace Lift.View
             internalData = new OptionsPage { Options = options, Translations = translations };
             DataContext = internalData;
 
+            // TODO set itemsSource from xaml (relative path)
+            cbLanguage.ItemsSource = internalData.Translations.SupportedLanguages;
+            
+            SelectActiveLanguage();
             _liftItems = liftItems;
+        }
 
-            foreach (System.Globalization.CultureInfo lang in internalData.Translations.SupportedLanguages)
+        private void SelectActiveLanguage()
+        {
+            int bestIndex = 0;
+            for (int i = cbLanguage.Items.Count-1; i >-1 ; i--)
             {
-                cbLanguage.Items.Add(lang.TwoLetterISOLanguageName);
+                var entry = cbLanguage.Items[i] as CultureInfo;
+                if (entry.IetfLanguageTag.Equals(internalData.Options.Locale))
+                {
+                    bestIndex = i;
+                    break;
+                }
+                else if (bestIndex == 0 && internalData.Options.Locale.StartsWith(entry.TwoLetterISOLanguageName))
+                {
+                    bestIndex = i;
+                }
             }
+            if (bestIndex == 0) internalData.Options.Locale = "en";
+            cbLanguage.SelectedIndex = bestIndex;
         }
 
         private void btnImportList_Click(object sender, RoutedEventArgs e)
@@ -72,21 +92,9 @@ namespace Lift.View
 
         private void cbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var lang = (sender as ComboBox).SelectedItem as string;
+            string lang = ((sender as ComboBox)?.SelectedItem as System.Globalization.CultureInfo)?.IetfLanguageTag;
             internalData.Translations.ChangeLocale(lang);
-            /*
-            string[] languages = new string[] { "en", "de" };
-            if (languages.Contains(lang))
-            {
-                DataContext.Translations
-                System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(lang);
-            }
-            Application.Current.MainWindow.Title = Lift.Properties.Resources.Title;
-            var res = Lift.Properties.Resources.ResourceManager;
-            
-            var t = res.GetString("Title");
-            Console.WriteLine("getString(title) returned ", t);/**/
-
+            internalData.Options.Locale = lang;
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace Lift.Persistence
 {
-    internal class OptionsStore
+    internal static class OptionsStore
     {
         internal static Data.Options Load()
         {

@@ -41,6 +41,7 @@ namespace Lift.View
             DataContext = LiftItems;
 
             Translations = new Lift.Resources.Localization.Translations();
+            Translations.ChangeLocale(Options.Locale);
             SetWindowTitle();
 
             // TODO: move this block to XAML, see http://www.galasoft.ch/mydotnet/articles/article-2007081301.aspx

@@ -46,8 +46,19 @@
                 <!--<TextBox Text="{Binding Sorting}" Grid.Row="2"/>-->
 
                 <TextBlock Text="{Binding Path=Translations[Options.Language], FallbackValue='Language'}" VerticalAlignment="Center" Grid.Row="3" Margin="0,12,0,0"/>
-                <ComboBox x:Name="cbLanguage" Grid.Row="4" VerticalAlignment="Top" SelectionChanged="cbLanguage_SelectionChanged"/>
-                
+                <ComboBox x:Name="cbLanguage" Grid.Row="4" VerticalAlignment="Top" SelectionChanged="cbLanguage_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
+                                <TextBlock Text="("/>
+                                <TextBlock Text="{Binding NativeName}"/>
+                                <TextBlock Text=")"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
                 <TextBlock Text="{Binding Path=Translations[Options.Other], FallbackValue='Other'}" VerticalAlignment="Center" Grid.Row="5" Margin="0,12,0,0"/>
                 <CheckBox Grid.Row="6" Content="{Binding Path=Translations[Options.PromptOnDelete], FallbackValue='Prompt before deleting an item'}" IsChecked="{Binding Options.PromptOnDelete}"/>
             </Grid>
