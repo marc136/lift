@@ -83,7 +83,7 @@
     <Compile Include="Persistence\OptionsStore.cs" />
     <Compile Include="Resources\Localization\LocalizationHelper.cs" />
     <Compile Include="Resources\Localization\TranslationStrings.cs" />
-    <Compile Include="ViewModels\OptionsPage.cs" />
+    <Compile Include="Persistence\GlobalState.cs" />
     <Compile Include="View\ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>
@@ -197,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Translations\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

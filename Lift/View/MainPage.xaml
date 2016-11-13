@@ -48,7 +48,7 @@
 
         <ListBox x:Name="lbLiftItems" Margin="6" Padding="5,0,0,0" Grid.Row="1" KeyboardNavigation.TabIndex="0"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            ItemsSource="{Binding }" d:DataContext="{d:DesignData Source=/DummyData/MainPage.xaml}"
+            ItemsSource="{Binding LiftItems}" d:DataContext="{d:DesignData Source=/DummyData/MainPage.xaml}"
             SelectionMode="Extended" AllowDrop="True" Drop="lbLiftItems_DropOn"
                  PreviewMouseLeftButtonDown="lbLiftItems_PreviewMouseLeftButtonDown" PreviewMouseMove="lbLiftItems_PreviewMouseMove">
             <ListBox.GroupStyle>

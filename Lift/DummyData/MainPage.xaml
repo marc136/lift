@@ -1,20 +1,23 @@
-﻿<m:LiftItems xmlns:m="clr-namespace:Lift.Data">
-    <m:LiftItem
-        FilePath="C:\bin\Mikogo-viewer.exe"
-        Arguments="-s 000000930"
-        Category="None"
-        Title="Join daily session">
-    </m:LiftItem>
-    <m:LiftItem
-        FilePath="C:\bin\Mikogo-host.exe"
-        Arguments="-s 000000930"
-        Category="Another"
-        Title="Start daily session">
-    </m:LiftItem>
-    <m:LiftItem
-        FilePath="C:\bin\Mikogo-host.exe"
-        Arguments="-s 000000930"
-        Category="None"
-        Title="Start daily session">
-    </m:LiftItem>
-</m:LiftItems>
+﻿<p:GlobalState xmlns:p="clr-namespace:Lift.Persistence"
+               xmlns:d="clr-namespace:Lift.Data">
+    <p:GlobalState.LiftItems>
+        <d:LiftItem
+            FilePath="C:\bin\Mikogo-viewer.exe"
+            Arguments="-s 000000930"
+            Category="None"
+            Title="Join daily session">
+        </d:LiftItem>
+        <d:LiftItem
+            FilePath="C:\bin\Mikogo-host.exe"
+            Arguments="-s 000000930"
+            Category="Another"
+            Title="Start daily session">
+        </d:LiftItem>
+        <d:LiftItem
+            FilePath="C:\bin\Mikogo-host.exe"
+            Arguments="-s 000000930"
+            Category="None"
+            Title="Start daily session">
+        </d:LiftItem>
+    </p:GlobalState.LiftItems>
+</p:GlobalState>

@@ -15,31 +15,27 @@ using System.Windows.Shapes;
 
 namespace Lift.View
 {
-    using System.Globalization;
-    using ViewModel;
-    using Translations = Resources.Localization.Translations;
-
     /// <summary>
     /// Interaction logic for Options.xaml
     /// </summary>
     public partial class Options : PageFunction<Data.Options>
     {
         private Data.LiftItems _liftItems;
-        private OptionsPage internalData;
+        private Persistence.GlobalState internalData;
 
-        public Options(Data.Options options, Translations translations, Data.LiftItems liftItems)
+        public Options(Persistence.GlobalState state)
         {
             InitializeComponent();
+            internalData = state;
 
-            System.Windows.Application.Current.MainWindow.Title = translations["Options.Title"];
-            internalData = new OptionsPage { Options = options, Translations = translations };
+            System.Windows.Application.Current.MainWindow.Title = state.Translations["Options.Title"];
             DataContext = internalData;
 
             // TODO set itemsSource from xaml (relative path)
             cbLanguage.ItemsSource = internalData.Translations.SupportedLanguages;
             
             SelectActiveLanguage();
-            _liftItems = liftItems;
+            _liftItems = internalData.LiftItems;
         }
 
         private void SelectActiveLanguage()
@@ -47,7 +43,7 @@ namespace Lift.View
             int bestIndex = 0;
             for (int i = cbLanguage.Items.Count-1; i >-1 ; i--)
             {
-                var entry = cbLanguage.Items[i] as CultureInfo;
+                var entry = cbLanguage.Items[i] as System.Globalization.CultureInfo;
                 if (entry.IetfLanguageTag.Equals(internalData.Options.Locale))
                 {
                     bestIndex = i;

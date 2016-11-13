@@ -21,9 +21,10 @@ namespace Lift.View
     /// </summary>
     public partial class MainPage : Page
     {
-        public Data.LiftItems LiftItems { get; private set; }
-        protected Data.Options Options { get; private set; }
-        protected Resources.Localization.Translations Translations { get; private set; }
+        internal Data.LiftItems LiftItems { get { return State.LiftItems; } }
+        protected Data.Options Options { get { return State.Options; } }
+        protected Resources.Localization.Translations Translations { get { return State.Translations; } }
+        private Persistence.GlobalState State { get; set; }
 
         private CollectionView itemCollectionView;
 
@@ -36,12 +37,11 @@ namespace Lift.View
 
             dragHelper = new DragDropHelper();
 
-            Options = Persistence.OptionsStore.Load();
-            LiftItems = Persistence.LiftItemsStore.Load();
-            DataContext = LiftItems;
+            State = Persistence.GlobalState.Load();
 
-            Translations = new Lift.Resources.Localization.Translations();
-            Translations.ChangeLocale(Options.Locale);
+            State.Translations.ChangeLocale(Options.Locale);
+            DataContext = State;
+
             SetWindowTitle();
 
             // TODO: move this block to XAML, see http://www.galasoft.ch/mydotnet/articles/article-2007081301.aspx
@@ -66,7 +66,7 @@ namespace Lift.View
 
         private void SetWindowTitle()
         {
-            Application.Current.MainWindow.Title = Translations["MainPage.Title"];
+            Application.Current.MainWindow.Title = State.Translations["MainPage.Title"];
         }
 
         private void UpdateLiftItems(bool refresh = true)
@@ -90,8 +90,8 @@ namespace Lift.View
 
             if (Options.PromptOnDelete)
             {
-                var text = "Do you really want to delete '" + item.Title + "'?";
-                var result = MessageBox.Show(text, "Delete menuItem", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                var text = string.Format(Translations["MainPage.ConfirmDelete"], item.Title);
+                var result = MessageBox.Show(text, Translations["MainPage.ConfirmDeleteHeader"], MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
                 if (result != MessageBoxResult.Yes) return;
             }
 
@@ -101,7 +101,10 @@ namespace Lift.View
 
         private void PromptNewCategoryName(string category)
         {
-            string newCategoryName = InputDialog.Prompt("Edit category name", "Edit", category);
+            string newCategoryName = InputDialog.Prompt(
+                string.Format(Translations["MainPage.EditCategory"], category),
+                Translations["MainPage.EditCategoryHeader"],
+                category);
 
             if (!String.IsNullOrWhiteSpace(newCategoryName))
             {
@@ -115,12 +118,12 @@ namespace Lift.View
         #region button click events
         private void btnOptions_Click(object btnSender, RoutedEventArgs btnEvent)
         {
-            var optionPage = new View.Options(Options, Translations, LiftItems);
+            var optionPage = new View.Options(State);
             optionPage.Return += (sender, e) =>
             {
                 SetWindowTitle(); // update the window title after returning to this page
-                Options = e.Result;
-                Persistence.OptionsStore.Save(Options);
+                State.Options = e.Result;
+                Persistence.OptionsStore.Save(State.Options);
             };
 
             this.NavigationService.Navigate(optionPage);
